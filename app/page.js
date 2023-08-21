@@ -1,5 +1,6 @@
 "use client"
 
+import { PerspectiveCamera } from "@react-three/drei"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 
@@ -20,6 +21,7 @@ export default function Home() {
         }}>Tutorial VR</Link>
       </div>
       <Views className="w-full h-80">
+        <PerspectiveCamera makeDefault position={[0, 0.5, 2]} fov={40} />
         <Boxes />
       </Views>
     </div>

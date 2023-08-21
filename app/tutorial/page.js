@@ -16,7 +16,7 @@ export default function Tutorial() {
 
   return (
     <>
-      {params == "vr" && <VRButton />}
+      {params === "vr" && <VRButton />}
       <Views className="w-full h-full" fpsActive={params === "fps" ? true : false}>
         <Suspense fallback={null}>
           <Controllers rayMaterial="red" />
