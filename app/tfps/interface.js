@@ -8,6 +8,7 @@ import { DoubleSide } from "three"
 import { Adam } from "@/components/character/adam"
 
 const Lighting = dynamic(() => import("@/components/lighting/light").then(mod => mod.TutorLighting), { ssr: false })
+const Comp = dynamic(() => import("@/components/other/computer").then(mod => mod.Computer), {ssr: false})
 const Target = dynamic(() => import("@/components/other/benda").then(mod => mod.Target), { ssr: false })
 const Views = dynamic(() => import("@/components/canvas/view"), {
   ssr: false,
@@ -23,6 +24,7 @@ export default function Interface(props) {
         <Physics debug>
           <Adam />
           <Target />
+          <Comp />
           <RigidBody colliders="hull" type="fixed">
             <Plane args={[20, 20]} rotation-x={-Math.PI / 2} receiveShadow onClick={() => console.log("clicked")}>
               <meshStandardMaterial color="whitesmoke" side={DoubleSide} />
