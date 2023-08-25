@@ -28,7 +28,7 @@ function Target() {
       const gripPos = controllers[1].grip.matrixWorld
       if (!isDynamic && parentRef.current && parentRef.current.userData.parentType === 'rigid_body') {
         parentRef.current.position.copy(new Vector3().setFromMatrixPosition(gripPos))
-        parentRef.current.position.add(new Vector3(0, -0.8, -0.5))
+        parentRef.current.position.add(new Vector3(0, 0, -0.5))
       }
     } else {
       if (!isDynamic && parentRef.current && parentRef.current.userData.parentType === 'rigid_body') {
