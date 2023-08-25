@@ -1,11 +1,11 @@
 "use client"
 
 import { useRef, useMemo } from "react"
-import { gate } from "../utils/tunnel"
-import { KeyboardControls, PointerLockControls, View } from "@react-three/drei"
+import { KeyboardControls, View, PointerLockControls } from "@react-three/drei"
 import { XR } from "@react-three/xr"
+import { gate } from "../utils/tunnel"
 
-function Views(props) {
+export default function Views(props) {
   const target = useRef()
 
   const mapKeys = useMemo(() => [
@@ -22,9 +22,9 @@ function Views(props) {
     <>
       <div ref={target} className={props.className} />
       <gate.In>
-        {props.fpsActive && <PointerLockControls />}
         <View track={target}>
-          <XR referenceSpace="local-floor">
+        {props.fps && <PointerLockControls />}
+          <XR referenceSpace="local">
             <KeyboardControls map={mapKeys}>
               {props.children}
             </KeyboardControls>
@@ -34,5 +34,3 @@ function Views(props) {
     </>
   )
 }
-
-export { Views }

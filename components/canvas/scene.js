@@ -6,7 +6,7 @@ import { gate } from "../utils/tunnel"
 
 export default function Scene(props) {
   return (
-    <Canvas camera={{ position: [0, 2, 4], fov: 40 }} shadows style={props.style} eventSource={props.source}>
+    <Canvas shadows style={props.style} eventSource={props.source} eventPrefix="client">
       <gate.Out />
       <Preload all />
     </Canvas>

@@ -8,7 +8,7 @@ const Scene = dynamic(() => import("../canvas/scene"), { ssr: false })
 export default function Template({ children }) {
   const parent = useRef()
   return (
-    <div ref={parent} className='w-full h-screen relative'>
+    <div ref={parent} className='w-full h-screen relative touch-auto'>
       {children}
       <Scene source={parent} style={{
         position: 'absolute',
@@ -16,7 +16,7 @@ export default function Template({ children }) {
         left: 0,
         width: '100vw',
         height: '100vh',
-        pointerEvents: "none"
+        pointerEvents: 'none',
       }} />
     </div>
   )

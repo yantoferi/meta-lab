@@ -9,6 +9,18 @@ function HomeLight() {
   )
 }
 
+function TutorLighting() {
+  return (
+    <>
+      <ambientLight color="white" intensity={1.3} />
+      <directionalLight color="whitesmoke" intensity={3} position={[-3, 7, -5]} castShadow shadow-mapSize={2048} shadow-bias={0.001}>
+        <orthographicCamera attach="shadow-camera" args={[-20, 20, 20, -20, 0.05, 2000]} />
+      </directionalLight>
+    </>
+  )
+}
+
 export {
   HomeLight,
+  TutorLighting,
 }

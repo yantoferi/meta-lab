@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useMemo, useRef } from "react"
-import { Box, Capsule, useKeyboardControls } from "@react-three/drei"
-import { CapsuleCollider, RigidBody, quat, vec3 } from "@react-three/rapier"
-import { Quaternion, Vector3, Object3D, Matrix4 } from "three"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { Box, Capsule, Sphere, useKeyboardControls } from "@react-three/drei"
+import { CapsuleCollider, RigidBody } from "@react-three/rapier"
+import { Vector3, Object3D } from "three"
 import { useFrame, useThree } from "@react-three/fiber"
-import { useXR } from "@react-three/xr"
+import { Interactive, useXR } from "@react-three/xr"
 
 function Boxes() {
   return (
@@ -15,13 +15,55 @@ function Boxes() {
   )
 }
 
+function Target() {
+  const parentRef = useRef()
+
+  const [isDynamic, setIsDynamic] = useState(true)
+
+  const { session, controllers } = useXR()
+
+  useFrame(state => {
+    const adam = state.scene.getObjectByName('Adam')
+    if (session && controllers.length !== 0) {
+      const gripPos = controllers[1].grip.position
+      if (!isDynamic && parentRef.current && parentRef.current.userData.parentType === 'rigid_body') {
+        parentRef.current.position.copy(gripPos)
+        parentRef.current.position.add(new Vector3(0, -0.8, -0.5))
+      }
+    } else {
+      if (!isDynamic && parentRef.current && parentRef.current.userData.parentType === 'rigid_body') {
+        const offset = new Vector3(0, 0.8, -1)
+        offset.applyQuaternion(adam.quaternion)
+        offset.add(adam.position)
+        parentRef.current.position.copy(offset)
+      }
+    }
+  })
+
+  return (
+    <Interactive
+      onSelectStart={(xrEvent) => { setIsDynamic(false); parentRef.current = xrEvent.intersection?.object.parent }}
+      onSelectEnd={() => setIsDynamic(true)}
+    >
+      <RigidBody colliders="ball" type={isDynamic ? "dynamic" : "kinematicPosition"} mass={10} userData={{ parentType: "rigid_body" }} position={[0, 2, -2]}>
+        <Sphere args={[0.15]} onClick={event => {
+          setIsDynamic(!isDynamic)
+          parentRef.current = event.object.parent
+        }}>
+          <meshStandardMaterial color="orange" roughness={0.8} />
+        </Sphere>
+      </RigidBody>
+    </Interactive>
+  )
+}
+
 function Char() {
   // Refs
   const charRef = useRef()
 
   // Vector direction
   const vectorMovement = useMemo(() => new Vector3(), [])
-  const camQunion = useMemo(() => new Quaternion(), [])
+  const pivot = useMemo(() => new Object3D(), [])
 
   // Keyboard controls
   const [, getKey] = useKeyboardControls()
@@ -42,31 +84,7 @@ function Char() {
 
   // Animation frame
   useFrame((state, delta) => {
-    const { forward, backward, left, right } = getKey()
-    const charPos = vec3(charRef.current.translation())
-    const charVel = vec3(charRef.current.linvel())
-    const charRot = quat(charRef.current.rotation())
-    const offsetCam = new Vector3(0, 0.5, 1)
-    const offsetVr = new Vector3(0, 0.2, 1)
-    let camRot = state.camera.quaternion
-
-    if (session) {
-      camRot = camQunion.setFromRotationMatrix(state.camera.matrixWorld)
-      offsetVr.applyQuaternion(charRot)
-      offsetVr.add(charPos)
-      player.position.copy(offsetVr)
-    } else {
-      // Camera movement
-      offsetCam.applyQuaternion(charRot)
-      offsetCam.add(charPos)
-      state.camera.position.copy(offsetCam)
-    }
-
-    // Movement
-    vectorMovement.set(right - left, 0, backward - forward).multiplyScalar(delta * 5).normalize()
-    vectorMovement.applyQuaternion(charRot)
-    charRef.current.setRotation(quat({ ...charRot, y: camRot.y, w: camRot.w }))
-    charRef.current.setLinvel({ ...vectorMovement, y: charVel.y }, true)
+    //
   })
 
   return (
@@ -82,4 +100,5 @@ function Char() {
 export {
   Boxes,
   Char,
+  Target,
 }
