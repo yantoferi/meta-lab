@@ -25,9 +25,9 @@ function Target() {
   useFrame(state => {
     const adam = state.scene.getObjectByName('Adam')
     if (session && controllers.length !== 0) {
-      const gripPos = controllers[1].grip.position
+      const gripPos = controllers[1].grip.matrixWorld
       if (!isDynamic && parentRef.current && parentRef.current.userData.parentType === 'rigid_body') {
-        parentRef.current.position.copy(gripPos)
+        parentRef.current.position.copy(new Vector3().setFromMatrixPosition(gripPos))
         parentRef.current.position.add(new Vector3(0, -0.8, -0.5))
       }
     } else {
