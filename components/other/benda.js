@@ -9,7 +9,7 @@ import { Interactive, useXR } from "@react-three/xr"
 
 function Boxes() {
   return (
-    <Box args={[0.5, 0.5, 0.5]}>
+    <Box args={[0.5, 0.5, 0.5]} position-y={0.35}>
       <meshBasicMaterial color="brown" />
     </Box>
   )

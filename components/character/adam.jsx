@@ -62,14 +62,14 @@ export function Adam(props) {
     vectorMovement.applyQuaternion(adamRotate)
 
     // Camera movement
-    offsetCam.applyQuaternion(adamRotate)
-    offsetCam.add(adamPos)
-    if (session) {
-      camRotate = new Quaternion().setFromRotationMatrix(state.camera.matrixWorld)
-      player.position.copy(offsetCam)
-    } else {
-      state.camera.position.copy(offsetCam)
-    }
+    // offsetCam.applyQuaternion(adamRotate)
+    // offsetCam.add(adamPos)
+    // if (session) {
+    //   camRotate = new Quaternion().setFromRotationMatrix(state.camera.matrixWorld)
+    //   player.position.copy(offsetCam)
+    // } else {
+    //   state.camera.position.copy(offsetCam)
+    // }
 
     // Aplly movement
     adam.current.setRotation({ x: adamRotate.x, y: camRotate.y, z: adamRotate.z, w: camRotate.w })
@@ -86,17 +86,17 @@ export function Adam(props) {
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
         <RigidBody ref={adam} colliders={false} type="dynamic" position={[0, 2, 0]} mass={70} enabledRotations={[false, true, false]} name='Adam'>
-          <CapsuleCollider ref={adamCollider} args={[0.25, 0.15]} friction={0.1} position={[0, 0.4, 0]} />
-          <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.005}>
+          <CapsuleCollider ref={adamCollider} args={[0.13, 0.075]} friction={0.1} position={[0, 0.2, 0]} />
+          <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.0025}>
             <primitive object={nodes.mixamorig7Hips} />
           </group>
-          <skinnedMesh name="Ch08_Beard" geometry={nodes.Ch08_Beard.geometry} material={materials.Ch08_hair} skeleton={nodes.Ch08_Beard.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.005} castShadow receiveShadow />
-          <skinnedMesh name="Ch08_Body" geometry={nodes.Ch08_Body.geometry} material={materials.Ch08_body} skeleton={nodes.Ch08_Body.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.005} castShadow receiveShadow />
-          <skinnedMesh name="Ch08_Eyelashes" geometry={nodes.Ch08_Eyelashes.geometry} material={materials.Ch08_hair} skeleton={nodes.Ch08_Eyelashes.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.005} castShadow receiveShadow />
-          <skinnedMesh name="Ch08_Hair" geometry={nodes.Ch08_Hair.geometry} material={materials.Ch08_hair} skeleton={nodes.Ch08_Hair.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.005} castShadow receiveShadow />
-          <skinnedMesh name="Ch08_Hoodie" geometry={nodes.Ch08_Hoodie.geometry} material={materials.Ch08_body1} skeleton={nodes.Ch08_Hoodie.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.005} castShadow receiveShadow />
-          <skinnedMesh name="Ch08_Pants" geometry={nodes.Ch08_Pants.geometry} material={materials.Ch08_body1} skeleton={nodes.Ch08_Pants.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.005} castShadow receiveShadow />
-          <skinnedMesh name="Ch08_Sneakers" geometry={nodes.Ch08_Sneakers.geometry} material={materials.Ch08_body1} skeleton={nodes.Ch08_Sneakers.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.005} castShadow receiveShadow />
+          <skinnedMesh name="Ch08_Beard" geometry={nodes.Ch08_Beard.geometry} material={materials.Ch08_hair} skeleton={nodes.Ch08_Beard.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.0025} castShadow receiveShadow />
+          <skinnedMesh name="Ch08_Body" geometry={nodes.Ch08_Body.geometry} material={materials.Ch08_body} skeleton={nodes.Ch08_Body.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.0025} castShadow receiveShadow />
+          <skinnedMesh name="Ch08_Eyelashes" geometry={nodes.Ch08_Eyelashes.geometry} material={materials.Ch08_hair} skeleton={nodes.Ch08_Eyelashes.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.0025} castShadow receiveShadow />
+          <skinnedMesh name="Ch08_Hair" geometry={nodes.Ch08_Hair.geometry} material={materials.Ch08_hair} skeleton={nodes.Ch08_Hair.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.0025} castShadow receiveShadow />
+          <skinnedMesh name="Ch08_Hoodie" geometry={nodes.Ch08_Hoodie.geometry} material={materials.Ch08_body1} skeleton={nodes.Ch08_Hoodie.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.0025} castShadow receiveShadow />
+          <skinnedMesh name="Ch08_Pants" geometry={nodes.Ch08_Pants.geometry} material={materials.Ch08_body1} skeleton={nodes.Ch08_Pants.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.0025} castShadow receiveShadow />
+          <skinnedMesh name="Ch08_Sneakers" geometry={nodes.Ch08_Sneakers.geometry} material={materials.Ch08_body1} skeleton={nodes.Ch08_Sneakers.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.0025} castShadow receiveShadow />
         </RigidBody>
       </group>
     </group>
