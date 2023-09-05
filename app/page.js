@@ -1,16 +1,23 @@
-import Link from "next/link"
-import Interface from "./view/interface"
+import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import styles from './app.module.css'
+
+const Views = dynamic(() => import("@/components/canvas/views"), {
+  loading: () => (
+    <div className={styles['custom-loader']}></div>
+  )
+})
 
 export default function Home() {
   return (
-    <>
-      <h1 className="text-white">Hello 3d</h1>
-      <div>
-        <Link href="/tfps">Tutorial FPS</Link>
-        <br />
-        <Link href="/tvr">Tutorial VR</Link>
-      </div>
-      <Interface />
-    </>
+    <div className="md:container mx-auto">
+      <Link href="/trainfps" className="text-black">To fps tutorial</Link>
+      <Views className="w-full h-80">
+        <mesh>
+          <boxGeometry args={[0.5, 0.5, 0.5]} />
+          <meshBasicMaterial color="orange" />
+        </mesh>
+      </Views>
+    </div>
   )
 }
