@@ -7,6 +7,7 @@ import { Preload } from '@react-three/drei'
 export default function Scene(props) {
   return (
     <Canvas
+      shadows="soft"
       camera={{position: [0, -0.3, 1]}}
       style={{
         width: '100%',

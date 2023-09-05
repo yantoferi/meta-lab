@@ -10,7 +10,7 @@ const Views = dynamic(() => import("@/components/canvas/views"), {
 
 export default function TrainFps() {
   return (
-    <Views className="w-full h-full" fps={true}>
+    <Views className="w-full h-full">
       <Contents />
     </Views>
   )
