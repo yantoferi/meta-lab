@@ -4,12 +4,12 @@ Command: npx gltfjsx@6.2.13 ../assets/adam.glb --transform --shadows
 Files: ../assets/adam.glb [36.13MB] > adam-transformed.glb [2.25MB] (94%)
 */
 
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useGLTF, useAnimations, useKeyboardControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { CapsuleCollider, RigidBody, quat, vec3 } from '@react-three/rapier'
-import { Vector3 } from 'three'
-import { AppContext } from '../utils/context'
+import { Quaternion, Vector3 } from 'three'
+import { useXR } from '@react-three/xr'
 
 const vectorMovement = new Vector3()
 
@@ -20,12 +20,15 @@ export function Adam(props) {
   const { actions } = useAnimations(animations, group)
 
   // State
-  const myContext = useContext(AppContext)
   const [pose, setPose] = useState("Idle")
 
   // Keyboard controls
-  const [, getKey] = useKeyboardControls()
+  const [subKey, getKey] = useKeyboardControls()
 
+  // XR
+  const { session, player, controllers } = useXR()
+
+  // Effect
   useEffect(() => {
     actions[pose].reset().fadeIn(0.5).play()
 
@@ -33,20 +36,55 @@ export function Adam(props) {
       actions[pose]?.fadeOut(0.5)
     }
   }, [pose, actions])
+  useEffect(() => {
+    return subKey(state => state, (pressed) => {
+      if (pressed.forward) {
+        setPose('Walking');
+      }
+      if (pressed.backward) {
+        setPose('Backward');
+      }
+      if (pressed.left) {
+        setPose('Leftside');
+      }
+      if (pressed.right) {
+        setPose('Rightside');
+      }
+      if (Object.values(pressed).every(key => !key)) {
+        setPose('Idle');
+      }
+    });
+  }, [subKey]);
 
   // Frames
   useFrame((state, delta) => {
+    const offsetCam = new Vector3(0, 1.3, -0.4)
     const { forward, backward, left, right } = getKey()
     const adamPosition = vec3(adam.current.translation())
     const adamRotate = quat(adam.current.rotation())
     const adamVel = vec3(adam.current.linvel())
+    let camRotate = state.camera.quaternion
+    const analog = controllers[0]?.inputSource.gamepad.axes
 
-    vectorMovement.set(right - left, 0, backward - forward).multiplyScalar(5 * delta).normalize()
+    if (controllers[0]) {
+      vectorMovement.set(analog[2], 0, analog[3]).multiplyScalar(5 * delta).normalize()
+    } else {
+      vectorMovement.set(right - left, 0, backward - forward).multiplyScalar(5 * delta).normalize()
+    }
     vectorMovement.applyQuaternion(adamRotate)
 
-    if (myContext.task.step.length > 1) {
-      adam.current.setLinvel({ ...vectorMovement, y: adamVel.y }, true)
+    // Camera movement
+    offsetCam.applyQuaternion(adamRotate)
+    offsetCam.add(adamPosition)
+    if (session) {
+      camRotate = new Quaternion().setFromRotationMatrix(state.camera.matrixWorld)
+      player.position.copy(offsetCam)
+    } else {
+      state.camera.position.copy(offsetCam)
     }
+
+    adam.current.setLinvel({ ...vectorMovement, y: adamVel.y }, true)
+    adam.current.setRotation({ x: adamRotate.x, y: camRotate.y, z: adamRotate.z, w: camRotate.w })
   })
 
   return (

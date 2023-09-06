@@ -2,9 +2,10 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
-import { Button, FpsButton } from '@/components/basic/button'
-import Contents from '../../components/basic/contents'
+import { VRButton } from '@react-three/xr'
+import Contents from '@/components/basic/contents'
 import styles from '../app.module.css'
+import { Button } from '@/components/basic/button'
 
 const Views = dynamic(() => import("@/components/canvas/views"), {
   loading: () => (
@@ -12,7 +13,7 @@ const Views = dynamic(() => import("@/components/canvas/views"), {
   )
 })
 
-export default function TrainFps() {
+export default function TrainVR() {
   const [step, setStep] = useState([])
 
   useEffect(() => {
@@ -25,9 +26,9 @@ export default function TrainFps() {
 
   return (
     <>
-      <FpsButton />
+      <VRButton />
       <Views className="w-full h-full">
-        <Contents physic={true} fps={true} step={step} />
+        <Contents physic={true} fps={false} vr={true} step={step} />
       </Views>
     </>
   )

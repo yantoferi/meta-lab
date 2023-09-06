@@ -1,16 +1,24 @@
 "use client"
 
-import { useContext } from 'react'
-import { AppContext } from '../utils/context'
-
-export default function Button() {
-  const myContext = useContext(AppContext)
-
+function Button(props) {
   return (
-    <button type="button" className="absolute left-0 top-0"
-      onClick={() => myContext.dispatch({type:'NEXT_STEP', value:'pass'})}
+    <button type="button" className="absolute left-0 top-0 text-black"
+      onClick={() => props.clicked('passed')}
     >
       next
     </button>
   )
+}
+
+function FpsButton() {
+  return (
+    <button id="startfps" type="button" className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-black z-20'>
+      Start
+    </button>
+  )
+}
+
+export {
+  Button,
+  FpsButton
 }

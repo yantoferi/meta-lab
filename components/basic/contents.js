@@ -1,25 +1,26 @@
 "use client"
 
 import dynamic from 'next/dynamic'
-import { OrbitControls, PerspectiveCamera, Plane, PointerLockControls } from '@react-three/drei'
+import { PerspectiveCamera, Plane, PointerLockControls } from '@react-three/drei'
 import { RigidBody } from '@react-three/rapier'
 import { Suspense } from 'react'
 import { DoubleSide } from 'three'
 import Wrapping from '@/components/canvas/wrap'
+import { Controllers } from '@react-three/xr'
 
 const Adam = dynamic(() => import("@/components/character/adam").then(mod => mod.Adam))
 // const Portal = dynamic(() => import("@/components/asset/portal").then(mod => mod.Portal))
 const TrainLight = dynamic(() => import("@/components/lighting/light").then(mod => mod.TrainLight))
 
-export default function Contents() {
+export default function Contents(props) {
   return (
     <Suspense fallback={null}>
-      {/* <PointerLockControls /> */}
-      <OrbitControls />
+      {props.fps && <PointerLockControls selector='#startfps' />}
       <PerspectiveCamera makeDefault position={[0, 2, 4]} />
       <TrainLight />
-      <Wrapping usePhysic={true}>
-        <Adam />
+      <Wrapping usePhysic={props.physic}>
+        {props.vr && <Controllers rayMaterial="red" />}
+        <Adam step={props.step} />
         <RigidBody colliders="hull" type='fixed'>
           <Plane args={[20, 20]} rotation-x={-Math.PI / 2} receiveShadow>
             <meshStandardMaterial color="whitesmoke" side={DoubleSide} />
