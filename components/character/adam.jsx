@@ -4,16 +4,23 @@ Command: npx gltfjsx@6.2.13 ../assets/adam.glb --transform --shadows
 Files: ../assets/adam.glb [36.13MB] > adam-transformed.glb [2.25MB] (94%)
 */
 
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useGLTF, useAnimations, useKeyboardControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
+import { CapsuleCollider, RigidBody, quat, vec3 } from '@react-three/rapier'
+import { Vector3 } from 'three'
+import { AppContext } from '../utils/context'
+
+const vectorMovement = new Vector3()
 
 export function Adam(props) {
   const group = useRef()
-  const { nodes, materials, animations } = useGLTF('models/adam-transformed.glb')
+  const adam = useRef()
+  const { nodes, materials, animations } = useGLTF('models/Adam-transformed.glb')
   const { actions } = useAnimations(animations, group)
 
   // State
+  const myContext = useContext(AppContext)
   const [pose, setPose] = useState("Idle")
 
   // Keyboard controls
@@ -23,34 +30,45 @@ export function Adam(props) {
     actions[pose].reset().fadeIn(0.5).play()
 
     return () => {
-      actions[pose].fadeOut(0.5)
+      actions[pose]?.fadeOut(0.5)
     }
   }, [pose, actions])
 
   // Frames
   useFrame((state, delta) => {
-    // const { forward, backward, left, right } = getKey()
-    // console.log({forward, backward, left, right})
-    console.log("frame")
+    const { forward, backward, left, right } = getKey()
+    const adamPosition = vec3(adam.current.translation())
+    const adamRotate = quat(adam.current.rotation())
+    const adamVel = vec3(adam.current.linvel())
+
+    vectorMovement.set(right - left, 0, backward - forward).multiplyScalar(5 * delta).normalize()
+    vectorMovement.applyQuaternion(adamRotate)
+
+    if (myContext.task.step.length > 1) {
+      adam.current.setLinvel({ ...vectorMovement, y: adamVel.y }, true)
+    }
   })
 
   return (
     <group ref={group} {...props} dispose={null}>
-      <group name="Scene">
-        <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.01}>
-          <primitive object={nodes.mixamorigHips} />
-        </group>
-        <skinnedMesh name="Ch23_Belt" geometry={nodes.Ch23_Belt.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Belt.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
-        <skinnedMesh name="Ch23_Body" geometry={nodes.Ch23_Body.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Body.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
-        <skinnedMesh name="Ch23_Eyelashes" geometry={nodes.Ch23_Eyelashes.geometry} material={materials.Ch23_hair} skeleton={nodes.Ch23_Eyelashes.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
-        <skinnedMesh name="Ch23_Hair" geometry={nodes.Ch23_Hair.geometry} material={materials.Ch23_hair} skeleton={nodes.Ch23_Hair.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
-        <skinnedMesh name="Ch23_Pants" geometry={nodes.Ch23_Pants.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Pants.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
-        <skinnedMesh name="Ch23_Shirt" geometry={nodes.Ch23_Shirt.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Shirt.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
-        <skinnedMesh name="Ch23_Shoes" geometry={nodes.Ch23_Shoes.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Shoes.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
-        <skinnedMesh name="Ch23_Suit" geometry={nodes.Ch23_Suit.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Suit.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
+      <group name="Adam_character">
+        <RigidBody ref={adam} colliders={false} type='dynamic' mass={70} position-y={1.5} enabledRotations={[false, true, false]}>
+          <CapsuleCollider args={[0.3, 0.25]} />
+          <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.01} position-y={-0.5}>
+            <primitive object={nodes.mixamorigHips} />
+          </group>
+          <skinnedMesh name="Ch23_Belt" geometry={nodes.Ch23_Belt.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Belt.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Body" geometry={nodes.Ch23_Body.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Body.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Eyelashes" geometry={nodes.Ch23_Eyelashes.geometry} material={materials.Ch23_hair} skeleton={nodes.Ch23_Eyelashes.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Hair" geometry={nodes.Ch23_Hair.geometry} material={materials.Ch23_hair} skeleton={nodes.Ch23_Hair.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Pants" geometry={nodes.Ch23_Pants.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Pants.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Shirt" geometry={nodes.Ch23_Shirt.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Shirt.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Shoes" geometry={nodes.Ch23_Shoes.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Shoes.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Suit" geometry={nodes.Ch23_Suit.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Suit.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />
+        </RigidBody>
       </group>
     </group>
   )
 }
 
-useGLTF.preload('models/adam-transformed.glb')
+useGLTF.preload('models/Adam-transformed.glb')

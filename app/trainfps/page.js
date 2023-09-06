@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic'
 import styles from '../app.module.css'
 import Contents from './contents'
+import Button from '@/components/basic/button'
 
 const Views = dynamic(() => import("@/components/canvas/views"), {
   loading: () => (
@@ -10,8 +11,11 @@ const Views = dynamic(() => import("@/components/canvas/views"), {
 
 export default function TrainFps() {
   return (
-    <Views className="w-full h-full">
-      <Contents />
-    </Views>
+    <>
+      <Button />
+      <Views className="w-full h-full">
+        <Contents />
+      </Views>
+    </>
   )
 }
