@@ -12,7 +12,7 @@ function Button(props) {
 
 function FpsButton() {
   return (
-    <button id="startfps" type="button" className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-black z-20'>
+    <button id="startfps" type="button" className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-black z-10'>
       Start
     </button>
   )

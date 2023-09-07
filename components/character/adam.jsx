@@ -58,7 +58,7 @@ export function Adam(props) {
 
   // Frames
   useFrame((state, delta) => {
-    const offsetCam = new Vector3(0, 1.3, -0.4)
+    const offsetCam = new Vector3(0, session? 1:1.3, -0.4)
     const { forward, backward, left, right } = getKey()
     const adamPosition = vec3(adam.current.translation())
     const adamRotate = quat(adam.current.rotation())

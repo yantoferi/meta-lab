@@ -7,7 +7,7 @@ Source: https://sketchfab.com/3d-models/low-poly-portal-38e1dec9d32d4a768f8e8108
 Title: Low Poly Portal
 */
 
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
 
@@ -16,16 +16,12 @@ export function Portal(props) {
   const { nodes, materials, animations } = useGLTF('models/portal.glb')
   const { actions } = useAnimations(animations, group)
 
-  useEffect(() => {
-    actions['Animation'].repetitions = 1
-  })
-
   return (
     <group ref={group} {...props} dispose={null}>
-      <group name="Sketchfab_Scene">
+      <group name="Sketchfab_Scene" position-z={-2}>
         <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
-          <RigidBody colliders={false} type="fixed">
-            <group name="root" onClick={() => { actions['Animation'].play() }}>
+          <RigidBody colliders={false} type="fixed" onIntersectionEnter={() => props.intersect({key: 1, active: true})}>
+            <group name="root">
               <group name="GLTF_SceneRootNode" rotation={[Math.PI / 2, 0, 0]} scale={0.5}>
                 <group name="Door_7" position={[2.042, 2.881, -0.12]}>
                   <mesh name="Object_17" castShadow receiveShadow geometry={nodes.Object_17.geometry} material={materials.Base} />
@@ -90,6 +86,7 @@ export function Portal(props) {
             </group>
             <CuboidCollider args={[0.4, 0.4, 1]} position={[-1, 0, 1.2]} />
             <CuboidCollider args={[0.35, 0.35, 1]} position={[1.1, 0, 1.2]} />
+            <CuboidCollider args={[0.6, 0.1, 0.3]} position={[0, 0.1, 0.3]} sensor />
           </RigidBody>
         </group>
       </group>
