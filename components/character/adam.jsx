@@ -39,22 +39,22 @@ export function Adam(props) {
   useEffect(() => {
     return subKey(state => state, (pressed) => {
       if (pressed.forward) {
-        setPose('Walking');
+        setPose('Walking')
       }
       if (pressed.backward) {
-        setPose('Backward');
+        setPose('Backward')
       }
       if (pressed.left) {
-        setPose('Leftside');
+        setPose('Leftside')
       }
       if (pressed.right) {
-        setPose('Rightside');
+        setPose('Rightside')
       }
       if (Object.values(pressed).every(key => !key)) {
-        setPose('Idle');
+        setPose('Idle')
       }
-    });
-  }, [subKey]);
+    })
+  }, [subKey])
 
   // Frames
   useFrame((state, delta) => {
@@ -83,7 +83,9 @@ export function Adam(props) {
       state.camera.position.copy(offsetCam)
     }
 
-    adam.current.setLinvel({ ...vectorMovement, y: adamVel.y }, true)
+    if (props.step.length > 0) {
+      adam.current.setLinvel({ ...vectorMovement, y: adamVel.y }, true)
+    }
     adam.current.setRotation({ x: adamRotate.x, y: camRotate.y, z: adamRotate.z, w: camRotate.w })
   })
 

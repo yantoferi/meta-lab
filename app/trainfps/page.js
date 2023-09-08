@@ -23,11 +23,9 @@ export default function TrainFps() {
     console.log(gate)
   })
 
-  const updateStep = value => {
-    setStep([...step, value])
-  }
   const closeModal = () => {
     setOpenModal(false)
+    setStep([...step, true])
   }
   const updateGate = value => {
     setGate([...gate, value])
