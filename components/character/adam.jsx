@@ -7,9 +7,10 @@ Files: ../assets/adam.glb [36.13MB] > adam-transformed.glb [2.25MB] (94%)
 import { useEffect, useRef, useState } from 'react'
 import { useGLTF, useAnimations, useKeyboardControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
-import { CapsuleCollider, RigidBody, quat, vec3 } from '@react-three/rapier'
+import { CapsuleCollider, RigidBody, quat, useRapier, vec3 } from '@react-three/rapier'
 import { Quaternion, Vector3 } from 'three'
 import { useXR } from '@react-three/xr'
+import { Ray } from '@dimforge/rapier3d-compat'
 
 const vectorMovement = new Vector3()
 
@@ -27,6 +28,9 @@ export function Adam(props) {
 
   // XR
   const { session, player, controllers } = useXR()
+
+  // Rapier
+  const { world } = useRapier()
 
   // Effect
   useEffect(() => {
@@ -59,7 +63,7 @@ export function Adam(props) {
   // Frames
   useFrame((state, delta) => {
     const offsetCam = new Vector3(0, session? 1:1.3, -0.4)
-    const { forward, backward, left, right } = getKey()
+    const { forward, backward, left, right, jump } = getKey()
     const adamPosition = vec3(adam.current.translation())
     const adamRotate = quat(adam.current.rotation())
     const adamVel = vec3(adam.current.linvel())
@@ -74,27 +78,30 @@ export function Adam(props) {
     vectorMovement.applyQuaternion(adamRotate)
 
     // Camera movement
-    offsetCam.applyQuaternion(adamRotate)
-    offsetCam.add(adamPosition)
-    if (session) {
-      camRotate = new Quaternion().setFromRotationMatrix(state.camera.matrixWorld)
-      player.position.copy(offsetCam)
-    } else {
-      state.camera.position.copy(offsetCam)
-    }
+    // offsetCam.applyQuaternion(adamRotate)
+    // offsetCam.add(adamPosition)
+    // if (session) {
+    //   camRotate = new Quaternion().setFromRotationMatrix(state.camera.matrixWorld)
+    //   player.position.copy(offsetCam)
+    // } else {
+    //   state.camera.position.copy(offsetCam)
+    // }
 
     if (props.step.length > 0) {
       adam.current.setLinvel({ ...vectorMovement, y: adamVel.y }, true)
     }
     adam.current.setRotation({ x: adamRotate.x, y: camRotate.y, z: adamRotate.z, w: camRotate.w })
+
+    const raycast = new Ray(adamPosition, {x: 0, y: -1, z: 0})
+    const hit = world.castRay(raycast, 0.8, false, undefined, undefined, undefined, adam.current)
   })
 
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Adam_character">
-        <RigidBody ref={adam} colliders={false} type='dynamic' mass={70} position-y={1.5} enabledRotations={[false, true, false]}>
-          <CapsuleCollider args={[0.3, 0.25]} />
-          <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.01} position-y={-0.5}>
+        <RigidBody ref={adam} colliders={false} type='dynamic' mass={70} position-y={1.5} enabledRotations={[false, true, false]} friction={0.2}>
+          <CapsuleCollider args={[0.3, 0.25]} position={[0, 0.54, 0]} />
+          <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.01}>
             <primitive object={nodes.mixamorigHips} />
           </group>
           <skinnedMesh name="Ch23_Belt" geometry={nodes.Ch23_Belt.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Belt.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.01} castShadow receiveShadow />

@@ -3,6 +3,8 @@
 import Scene from '@/components/canvas/scene'
 import { useReducer, useRef } from 'react'
 import { AppContext } from '../utils/context'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
 
 export default function Template({ children }) {
   const parent = useRef()
@@ -15,6 +17,13 @@ export default function Template({ children }) {
       <AppContext.Provider value={{task, dispatch}}>
         {children}
         <Scene source={parent} />
+        <ToastContainer
+          newestOnTop
+          position='top-left'
+          hideProgressBar
+          closeOnClick
+          theme='dark'
+        />
       </AppContext.Provider>
     </div>
   )
