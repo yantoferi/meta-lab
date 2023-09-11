@@ -71,9 +71,9 @@ export function Adam(props) {
     const analog = controllers[0]?.inputSource.gamepad.axes
 
     if (controllers[0]) {
-      vectorMovement.set(analog[2], 0, analog[3]).multiplyScalar(5 * delta).normalize()
+      vectorMovement.set(analog[2], 0, analog[3]).multiplyScalar(1.2)
     } else {
-      vectorMovement.set(right - left, 0, backward - forward).multiplyScalar(5 * delta).normalize()
+      vectorMovement.set(right - left, 0, backward - forward).multiplyScalar(1.2)
     }
     vectorMovement.applyQuaternion(adamRotate)
 
@@ -96,7 +96,7 @@ export function Adam(props) {
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Adam_character">
-        <RigidBody ref={adam} colliders={false} type='dynamic' mass={70} position-y={1.5} enabledRotations={[false, true, false]} friction={0.2}>
+        <RigidBody ref={adam} colliders={false} type='dynamic' mass={70} position-y={0} enabledRotations={[false, true, false]} friction={0.2}>
           <CapsuleCollider args={[0.3, 0.25]} position={[0, 0.54, 0]} />
           <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.01}>
             <primitive object={nodes.mixamorigHips} />

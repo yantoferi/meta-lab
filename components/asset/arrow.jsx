@@ -8,33 +8,46 @@ Source: https://sketchfab.com/3d-models/directional-arrow-1-9658f746810f4390bbcb
 Title: directional arrow_1
 */
 
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
+import { CylinderCollider, RigidBody } from '@react-three/rapier'
 
 export function Arrow(props) {
   const group = useRef()
   const { nodes, materials, animations } = useGLTF('models/arrow-transformed.glb')
   const { actions } = useAnimations(animations, group)
+
+  useEffect(() => {
+    actions['CINEMA_4D_Main'].reset().fadeIn(0.5).play()
+
+    return () => {
+      actions['CINEMA_4D_Main']?.fadeOut(0.5)
+    }
+  }, [actions])
+
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Sketchfab_Scene">
-        <group name="RootNode" scale={0.001}>
-          <group name="Cube_2" position={[-2.121, 1852.212, 0]} rotation={[Math.PI / 2, Math.PI / 4, 0]} scale={0.953}>
-            <mesh name="Cube_2_Mat_0" castShadow receiveShadow geometry={nodes.Cube_2_Mat_0.geometry} material={materials.material} />
-            <mesh name="Cube_2_Mat1_0" castShadow receiveShadow geometry={nodes.Cube_2_Mat1_0.geometry} material={materials['Mat.1']} />
-            <mesh name="Cube_2__0" castShadow receiveShadow geometry={nodes.Cube_2__0.geometry} material={materials.Cube_2__0} />
+        <RigidBody colliders={false} type='fixed' userData={{id: `arrow_${props.identity}`, isArrow: true}} onIntersectionEnter={payload => props.hitPortal(payload.target.rigidBody.userData.id)}>
+          <group name="RootNode" scale={0.0007}>
+            <group name="Cube_2" position={[-2.121, 1852.212, 0]} rotation={[Math.PI / 2, Math.PI / 4, 0]} scale={0.953}>
+              <mesh name="Cube_2_Mat_0" castShadow receiveShadow geometry={nodes.Cube_2_Mat_0.geometry} material={materials.material} />
+              <mesh name="Cube_2_Mat1_0" castShadow receiveShadow geometry={nodes.Cube_2_Mat1_0.geometry} material={materials['Mat.1']} />
+              <mesh name="Cube_2__0" castShadow receiveShadow geometry={nodes.Cube_2__0.geometry} material={materials.Cube_2__0} />
+            </group>
+            <group name="Cube_1" position={[-2.121, 1352.212, 0]} rotation={[Math.PI / 2, Math.PI / 4, 0]} scale={0.953}>
+              <mesh name="Cube_1_Mat_0" castShadow receiveShadow geometry={nodes.Cube_1_Mat_0.geometry} material={materials.material} />
+              <mesh name="Cube_1_Mat1_0" castShadow receiveShadow geometry={nodes.Cube_1_Mat1_0.geometry} material={materials['Mat.1']} />
+              <mesh name="Cube_1__0" castShadow receiveShadow geometry={nodes.Cube_1__0.geometry} material={materials.Cube_2__0} />
+            </group>
+            <group name="Cube" position={[-2.121, 752.212, 0]} rotation={[Math.PI / 2, Math.PI / 4, 0]} scale={0.953}>
+              <mesh name="Cube_Mat_0" castShadow receiveShadow geometry={nodes.Cube_Mat_0.geometry} material={materials.material} />
+              <mesh name="Cube_Mat1_0" castShadow receiveShadow geometry={nodes.Cube_Mat1_0.geometry} material={materials['Mat.1']} />
+              <mesh name="Cube__0" castShadow receiveShadow geometry={nodes.Cube__0.geometry} material={materials.Cube_2__0} />
+            </group>
           </group>
-          <group name="Cube_1" position={[-2.121, 1352.212, 0]} rotation={[Math.PI / 2, Math.PI / 4, 0]} scale={0.953}>
-            <mesh name="Cube_1_Mat_0" castShadow receiveShadow geometry={nodes.Cube_1_Mat_0.geometry} material={materials.material} />
-            <mesh name="Cube_1_Mat1_0" castShadow receiveShadow geometry={nodes.Cube_1_Mat1_0.geometry} material={materials['Mat.1']} />
-            <mesh name="Cube_1__0" castShadow receiveShadow geometry={nodes.Cube_1__0.geometry} material={materials.Cube_2__0} />
-          </group>
-          <group name="Cube" position={[-2.121, 752.212, 0]} rotation={[Math.PI / 2, Math.PI / 4, 0]} scale={0.953}>
-            <mesh name="Cube_Mat_0" castShadow receiveShadow geometry={nodes.Cube_Mat_0.geometry} material={materials.material} />
-            <mesh name="Cube_Mat1_0" castShadow receiveShadow geometry={nodes.Cube_Mat1_0.geometry} material={materials['Mat.1']} />
-            <mesh name="Cube__0" castShadow receiveShadow geometry={nodes.Cube__0.geometry} material={materials.Cube_2__0} />
-          </group>
-        </group>
+          <CylinderCollider args={[0.1, 0.2]} sensor />
+        </RigidBody>F
       </group>
     </group>
   )

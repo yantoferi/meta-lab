@@ -24,29 +24,26 @@ export default function TrainFps() {
     console.log(gate)
   })
   useEffect(() => {
-    if (gate.length === 5) {
-      toast.success('complete', {autoClose:3000})
-      setTimeout(() => setOpenModal(true), 4000)
-    } else if (gate.length > 0 && gate.length < 5) {
-      toast.dismiss()
-      toast.info(`you hit ${gate.length} portal`, {autoClose:2000})
-    }
-  }, [gate])
-  useEffect(() => {
     if (step.length === 1) {
-      toast.warning('Hit 5 portal', {autoClose:3000})
+      toast.warning('Bergeraklah menuju empat lokasi panah', {autoClose:3000})
     } else if (step.length === 2) {
-      toast.warning('Grab object', {autoClose:3000})
+      toast.warning('Ambil benda bola atau kapsul', {autoClose:3000})
     }
   }, [step])
+  useEffect(() => {
+    if (gate.length === 4) {
+      setOpenModal(true)
+    }
+  }, [gate])
 
   const closeModal = () => {
     setOpenModal(false)
     setStep([...step, true])
   }
-  const updateGate = () => {
-    if (gate.length <= 5) {
-      setGate([...gate, true])
+  const updateGate = value => {
+    const exist = gate.includes(value)
+    if (!exist) {
+      setGate([...gate, value])
     }
   }
 

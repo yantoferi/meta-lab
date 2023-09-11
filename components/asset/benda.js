@@ -1,6 +1,7 @@
 "use client"
 
-import { Box } from '@react-three/drei'
+import { Box, Sphere } from '@react-three/drei'
+import { RigidBody } from '@react-three/rapier'
 
 function Boxes(props) {
   return (
@@ -10,6 +11,17 @@ function Boxes(props) {
   )
 }
 
+function Ball() {
+  return (
+    <RigidBody colliders="ball" type='dynamic' position={[0, 0.5, -5]}>
+      <Sphere args={[0.3]}>
+        <meshBasicMaterial color="brown" />
+      </Sphere>
+    </RigidBody>
+  )
+}
+
 export {
   Boxes,
+  Ball,
 }

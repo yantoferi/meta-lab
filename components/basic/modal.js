@@ -5,7 +5,7 @@ import { HiXMark } from 'react-icons/hi2'
 
 export default function Modal(props) {
   return (
-    <Dialog as='div' className='relative z-20' open={props.open} onClose={() => props.close()}>
+    <Dialog as='div' className='relative' open={props.open} onClose={() => props.close()} style={{zIndex: 10000}}>
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div className='fixed inset-0 flex w-screen items-center justify-center p-4'>
         <Dialog.Panel className='absolute w-11/12 sm:w-8/12 md:w-7/12 lg:w-96 h-64 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white opacity-100 rounded-2xl p-4 flex flex-col justify-between'>
