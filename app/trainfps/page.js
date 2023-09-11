@@ -26,16 +26,23 @@ export default function TrainFps() {
   useEffect(() => {
     if (gate.length === 5) {
       toast.success('complete', {autoClose:3000})
-    } else if (gate.length > 0) {
+      setTimeout(() => setOpenModal(true), 4000)
+    } else if (gate.length > 0 && gate.length < 5) {
       toast.dismiss()
-      toast.info(`you hit ${gate.length} portal`, {autoClose:3000})
+      toast.info(`you hit ${gate.length} portal`, {autoClose:2000})
     }
   }, [gate])
+  useEffect(() => {
+    if (step.length === 1) {
+      toast.warning('Hit 5 portal', {autoClose:3000})
+    } else if (step.length === 2) {
+      toast.warning('Grab object', {autoClose:3000})
+    }
+  }, [step])
 
   const closeModal = () => {
     setOpenModal(false)
     setStep([...step, true])
-    toast.success('Hit 5 portal', {autoClose:3000})
   }
   const updateGate = () => {
     if (gate.length <= 5) {
@@ -47,7 +54,7 @@ export default function TrainFps() {
     <>
       <FpsButton />
       <Views className="w-full h-full">
-        <Contents physic={true} fps={true} step={step} hitPortal={updateGate} />
+        <Contents physic={true} fps={true} step={step} hitPortal={updateGate} isModalOpen={openModal} />
       </Views>
       <Modal open={openModal} close={closeModal} />
     </>

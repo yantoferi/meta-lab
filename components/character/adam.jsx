@@ -87,13 +87,10 @@ export function Adam(props) {
     //   state.camera.position.copy(offsetCam)
     // }
 
-    if (props.step.length > 0) {
+    if (!props.modalOpen) {
       adam.current.setLinvel({ ...vectorMovement, y: adamVel.y }, true)
     }
     adam.current.setRotation({ x: adamRotate.x, y: camRotate.y, z: adamRotate.z, w: camRotate.w })
-
-    const raycast = new Ray(adamPosition, {x: 0, y: -1, z: 0})
-    const hit = world.castRay(raycast, 0.8, false, undefined, undefined, undefined, adam.current)
   })
 
   return (
