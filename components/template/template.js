@@ -23,6 +23,7 @@ export default function Template({ children }) {
           hideProgressBar
           closeOnClick
           theme='dark'
+          style={{zIndex: "10000"}}
         />
       </AppContext.Provider>
     </div>

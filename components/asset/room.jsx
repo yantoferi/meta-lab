@@ -15,7 +15,7 @@ export function Room(props) {
   const { nodes, materials } = useGLTF('models/room-transformed.glb')
   return (
     <group {...props} dispose={null}>
-      <RigidBody colliders={false} type='fixed'>
+      <RigidBody colliders={false} type='fixed' userData={{type:"floor"}}>
         <group scale={0.5}>
           <mesh castShadow receiveShadow geometry={nodes.Object_13.geometry} material={materials.Poll_1} position={[-14.829, 0, 0.056]} rotation={[0, Math.PI / 2, 0]} scale={[1, 6.142, 1]} />
           <mesh castShadow receiveShadow geometry={nodes.Object_28.geometry} material={materials['Material.002']} position={[0, 0, -10.187]} scale={[45.475, 5.938, 59.737]} />

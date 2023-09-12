@@ -22,6 +22,7 @@ export function Adam(props) {
 
   // State
   const [pose, setPose] = useState("Idle")
+  const [canJump, setCanJump] = useState(true)
 
   // Keyboard controls
   const [subKey, getKey] = useKeyboardControls()
@@ -62,15 +63,15 @@ export function Adam(props) {
 
   // Frames
   useFrame((state, delta) => {
-    const offsetCam = new Vector3(0, session? 1:1.3, -0.4)
+    const offsetCam = new Vector3(0, session? 1:1.5, -0.3)
     const { forward, backward, left, right, jump } = getKey()
     const adamPosition = vec3(adam.current.translation())
     const adamRotate = quat(adam.current.rotation())
     const adamVel = vec3(adam.current.linvel())
     let camRotate = state.camera.quaternion
-    const analog = controllers[0]?.inputSource.gamepad.axes
-
-    if (controllers[0]) {
+    
+    if (session && (controllers.length !== 0)) {
+      const analog = controllers[0]?.inputSource?.gamepad?.axes
       vectorMovement.set(analog[2], 0, analog[3]).multiplyScalar(1.2)
     } else {
       vectorMovement.set(right - left, 0, backward - forward).multiplyScalar(1.2)
@@ -78,25 +79,52 @@ export function Adam(props) {
     vectorMovement.applyQuaternion(adamRotate)
 
     // Camera movement
-    // offsetCam.applyQuaternion(adamRotate)
-    // offsetCam.add(adamPosition)
-    // if (session) {
-    //   camRotate = new Quaternion().setFromRotationMatrix(state.camera.matrixWorld)
-    //   player.position.copy(offsetCam)
-    // } else {
-    //   state.camera.position.copy(offsetCam)
-    // }
+    offsetCam.applyQuaternion(adamRotate)
+    offsetCam.add(adamPosition)
+    if (session) {
+      camRotate = new Quaternion().setFromRotationMatrix(state.camera.matrixWorld)
+      player.position.copy(offsetCam)
+    } else {
+      state.camera.position.copy(offsetCam)
+    }
 
     if (!props.modalOpen) {
       adam.current.setLinvel({ ...vectorMovement, y: adamVel.y }, true)
     }
+
+    // For jump
+    if (session && (controllers.length !== 0)) {
+      if (canJump && controllers[0]?.inputSource?.gamepad?.buttons[5].pressed) {
+        adam.current.setLinvel({ ...vectorMovement, y: 3 }, true)
+      }
+    } else {
+      if (canJump && jump) {
+        adam.current.setLinvel({ ...vectorMovement, y: 3 }, true)
+      }
+    }
+
     adam.current.setRotation({ x: adamRotate.x, y: camRotate.y, z: adamRotate.z, w: camRotate.w })
   })
+
+  const changeStatusJump = payload => {
+    const typeObject = payload.other.rigidBodyObject.userData.type
+    const acceptObject = ['floor', 'room']
+    const onFloor = acceptObject.includes(typeObject)
+    
+    if (onFloor) {
+      setCanJump(true)
+    } else {
+      setCanJump(false)
+    }
+  }
 
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Adam_character">
-        <RigidBody ref={adam} colliders={false} type='dynamic' mass={70} position-y={0} enabledRotations={[false, true, false]} friction={0.2}>
+        <RigidBody ref={adam} colliders={false} type='dynamic' mass={70} position-y={0} enabledRotations={[false, true, false]} friction={0.2}
+          onCollisionEnter={changeStatusJump}
+          onCollisionExit={payload => setCanJump(false)}
+        >
           <CapsuleCollider args={[0.3, 0.25]} position={[0, 0.54, 0]} />
           <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.01}>
             <primitive object={nodes.mixamorigHips} />

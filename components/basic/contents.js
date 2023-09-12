@@ -15,7 +15,7 @@ const TrainLight = dynamic(() => import("@/components/lighting/light").then(mod 
 export default function Contents(props) {
   return (
     <Suspense fallback={null}>
-      {/* {props.fps && <PointerLockControls selector='#startfps' />} */}
+      {props.fps && <PointerLockControls selector='#startfps' />}
       {/* <OrbitControls /> */}
       <PerspectiveCamera makeDefault position={[0, 2, 4]} />
       <TrainLight />
