@@ -16,7 +16,7 @@ export function Room(props) {
   return (
     <group {...props} dispose={null}>
       <RigidBody colliders={false} type='fixed' userData={{type:"floor"}}>
-        <group scale={0.5}>
+        <group scale={0.08}>
           <mesh castShadow receiveShadow geometry={nodes.Object_13.geometry} material={materials.Poll_1} position={[-14.829, 0, 0.056]} rotation={[0, Math.PI / 2, 0]} scale={[1, 6.142, 1]} />
           <mesh castShadow receiveShadow geometry={nodes.Object_28.geometry} material={materials['Material.002']} position={[0, 0, -10.187]} scale={[45.475, 5.938, 59.737]} />
           <mesh castShadow receiveShadow geometry={nodes.Object_29.geometry} material={materials.ground} position={[0, 0, -10.187]} scale={[45.475, 5.938, 59.737]} />
@@ -33,7 +33,7 @@ export function Room(props) {
           <instancedMesh args={[nodes.Object_23.geometry, materials.pipe, 7]} castShadow receiveShadow instanceMatrix={nodes.Object_23.instanceMatrix} />
           <instancedMesh args={[nodes.Object_35.geometry, materials.block_low, 6]} castShadow receiveShadow instanceMatrix={nodes.Object_35.instanceMatrix} />
         </group>
-        <CuboidCollider args={[22, 0.5, 29]} position={[0, -3.45, -5]} />
+        <CuboidCollider args={[3.5, 0.07, 4.6]} position={[0, -0.46, -0.8]} />
       </RigidBody>
     </group>
   )
