@@ -28,8 +28,8 @@ function Ball() {
   }
 
   return (
-    <RigidBody colliders="ball" type='dynamic' position={[0, 1, 0]}>
-      <Sphere args={[0.3]} onClick={putObject}>
+    <RigidBody colliders="ball" type='dynamic' position={[0, 1, -2]}>
+      <Sphere args={[0.05]} onClick={putObject}>
         <meshBasicMaterial color="brown" />
       </Sphere>
     </RigidBody>

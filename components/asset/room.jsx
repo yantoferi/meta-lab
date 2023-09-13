@@ -33,7 +33,17 @@ export function Room(props) {
           <instancedMesh args={[nodes.Object_23.geometry, materials.pipe, 7]} castShadow receiveShadow instanceMatrix={nodes.Object_23.instanceMatrix} />
           <instancedMesh args={[nodes.Object_35.geometry, materials.block_low, 6]} castShadow receiveShadow instanceMatrix={nodes.Object_35.instanceMatrix} />
         </group>
-        <CuboidCollider args={[3.5, 0.07, 4.6]} position={[0, -0.46, -0.8]} />
+        <CuboidCollider args={[3.55, 0.01, 4.65]} position={[0, -0.46, -0.8]} />
+        <CuboidCollider args={[0.02, 0.46, 4.65]} position={[-3.6, 0, -0.8]} />
+        <CuboidCollider args={[0.02, 0.46, 4.65]} position={[3.6, 0, -0.8]} />
+        <CuboidCollider args={[3.55, 0.46, 0.02]} position={[0, 0, -5.5]} />
+        <CuboidCollider args={[3.55, 0.46, 0.02]} position={[0, 0, 3.9]} />
+        {[0.01, 0.73, -0.71].map((item, id) => (
+          <CuboidCollider key={id} args={[0.2, 0.08, 0.08]} position={[item, -0.39, 0.02]} />
+        ))}
+        {[0.01, 0.8, -0.71].map((item, id) => (
+          <CuboidCollider key={id} args={[0.2, 0.08, 0.08]} position={[item, -0.39, -1.6]} />
+        ))}
       </RigidBody>
     </group>
   )
