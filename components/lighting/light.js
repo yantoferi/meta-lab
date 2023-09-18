@@ -9,6 +9,15 @@ function TrainLight() {
   )
 }
 
+function SimulationLight() {
+  return (
+    <>
+      <ambientLight color="white" intensity={1.5} />
+    </>
+  )
+}
+
 export {
   TrainLight,
+  SimulationLight
 }

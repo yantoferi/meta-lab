@@ -40,7 +40,7 @@ export function Bottle(props) {
       const gripPos = controllers[1].grip.matrixWorld
       if (!isDynamic && parentRef.current && parentRef.current.userData.parentType === 'rigid_body') {
         parentRef.current.position.copy(new Vector3().setFromMatrixPosition(gripPos))
-        parentRef.current.position.add(new Vector3(0, -0.05, -0.1))
+        parentRef.current.position.add(new Vector3(0, -0.09, -0.1))
       }
     }
   })

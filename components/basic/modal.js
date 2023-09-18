@@ -22,7 +22,7 @@ export default function Modal(props) {
               {props.vrModal && <div className="h-44 relative">
                 <Image src="/images/controllers.jpg" alt='Gambar layout controller' fill />
               </div>}
-              <table className='table-auto w-full'>
+              <table className='table-auto w-full text-black'>
                 <thead className='bg-[#f9f9f9] font-medium'>
                   <tr>
                     <td align='center' className='p-1'>Key</td>
@@ -30,7 +30,7 @@ export default function Modal(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {props.keys.map((item, index) => {
+                  {props.keys?.map((item, index) => {
                     return (
                       <tr key={index}>
                         <td align='center' className='w-28'>

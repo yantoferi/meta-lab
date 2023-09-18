@@ -5,9 +5,9 @@ import { PerspectiveCamera, PointerLockControls } from '@react-three/drei'
 import { Suspense } from 'react'
 import { Controllers } from '@react-three/xr'
 import Wrapping from '@/components/canvas/wrap'
-// import Experices from './experiences'
+import Experices from './experiences'
 
-// const Adam = dynamic(() => import("@/components/character/adam").then(mod => mod.Adam), {ssr: false})
+const Adam = dynamic(() => import("@/components/character/adam").then(mod => mod.Adam), {ssr: false})
 const Arrow = dynamic(() => import("@/components/asset/arrow").then(mod => mod.Arrow), {ssr: false})
 const Room = dynamic(() => import("@/components/asset/room").then(mod => mod.Room), {ssr: false})
 const TrainLight = dynamic(() => import("@/components/lighting/light").then(mod => mod.TrainLight), {ssr: false})
@@ -24,8 +24,8 @@ export default function Contents(props) {
           <Arrow key={id} identity={id} position={[item.x, item.y, item.z]} hitPortal={props.hitPortal} />
         ))}
         <Room />
-        {/* <Adam step={props.step} modalOpen={props.isModalOpen} />
-        <Experices step={props.step} /> */}
+        <Adam step={props.step} modalOpen={props.isModalOpen} />
+        <Experices step={props.step} />
       </Wrapping>
     </Suspense>
   )

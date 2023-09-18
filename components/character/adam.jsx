@@ -79,14 +79,14 @@ export function Adam(props) {
     vectorMovement.applyQuaternion(adamRotate)
 
     // Camera movement
-    offsetCam.applyQuaternion(adamRotate)
-    offsetCam.add(adamPosition)
-    if (session) {
-      camRotate = new Quaternion().setFromRotationMatrix(state.camera.matrixWorld)
-      player.position.copy(offsetCam)
-    } else {
-      state.camera.position.copy(offsetCam)
-    }
+    // offsetCam.applyQuaternion(adamRotate)
+    // offsetCam.add(adamPosition)
+    // if (session) {
+    //   camRotate = new Quaternion().setFromRotationMatrix(state.camera.matrixWorld)
+    //   player.position.copy(offsetCam)
+    // } else {
+    //   state.camera.position.copy(offsetCam)
+    // }
 
     if (!props.modalOpen) {
       adam.current.setLinvel({ ...vectorMovement, y: adamVel.y }, true)
@@ -126,7 +126,7 @@ export function Adam(props) {
           onCollisionExit={payload => changeStatusJump(payload, "exit")}
         >
           <CapsuleCollider args={[0.09, 0.07]} />
-          <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.002} position-y={-0.17}>
+          <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.002} position-y={-0.16}>
             <primitive object={nodes.mixamorigHips} />
           </group>
           <skinnedMesh name="Ch23_Belt" geometry={nodes.Ch23_Belt.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Belt.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.002} castShadow receiveShadow />

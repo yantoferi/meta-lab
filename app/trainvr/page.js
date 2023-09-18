@@ -49,18 +49,26 @@ export default function TrainVR() {
       <Views className="w-full h-full">
         <Contents physic={true} fps={false} vr={true} step={step} hitPortal={updateGate} isModalOpen={openModal} />
       </Views>
-      <Modal open={openModal} close={closeModal} keys={infoKey} vrModal={true} />
+      <Modal open={openModal} close={closeModal} keys={infoKey[step.length]} vrModal={true} />
     </>
   )
 }
 
 const infoKey = [
-  {
-    key: <BsJoystick />,
-    ket: 'Untuk bergerak ke depan, samping, dan belakang'
-  },
-  {
-    key: 'A',
-    ket: 'Untuk bergerak melompat'
-  },
+  [
+    {
+      key: 'L thumbstick',
+      ket: 'Untuk bergerak ke depan, samping, dan belakang'
+    },
+    {
+      key: 'B',
+      ket: 'Untuk bergerak melompat'
+    },
+  ],
+  [
+    {
+      key: 'R triger',
+      ket: 'Untuk berinteraksi dengan objek'
+    },
+  ]
 ]
