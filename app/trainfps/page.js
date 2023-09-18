@@ -2,22 +2,18 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
-import { FpsButton } from '@/components/basic/button'
-import Contents from '../../components/basic/contents'
-import styles from '../app.module.css'
-import Modal from '@/components/basic/modal'
 import { toast } from 'react-toastify'
+import { FpsButton } from '@/components/basic/button'
+import Contents from '@/components/basic/contents'
+import Modal from '@/components/basic/modal'
 
-const Views = dynamic(() => import("@/components/canvas/views"), {
-  loading: () => (
-    <div className={styles['custom-loader']}></div>
-  )
-})
+const Views = dynamic(() => import("@/components/canvas/views"), { ssr: false })
 
 export default function TrainFps() {
   const [step, setStep] = useState([])
   const [gate, setGate] = useState([])
   const [openModal, setOpenModal] = useState(true)
+  const [isLocked, setIsLocked] = useState(false)
 
   useEffect(() => {
     console.log(step)
@@ -25,9 +21,9 @@ export default function TrainFps() {
   })
   useEffect(() => {
     if (step.length === 1) {
-      toast.warning('Bergeraklah menuju empat lokasi panah', {autoClose:3000})
+      toast.warning('Bergeraklah menuju empat lokasi panah', { autoClose: 2000 })
     } else if (step.length === 2) {
-      toast.warning('Ambil benda bola atau kapsul', {autoClose:3000})
+      toast.warning('Ambil benda bola atau kapsul', { autoClose: 2000 })
     }
   }, [step])
   useEffect(() => {
@@ -46,14 +42,48 @@ export default function TrainFps() {
       setGate([...gate, value])
     }
   }
+  const pointerLock = (value) => {
+    setIsLocked(value)
+  }
 
   return (
     <>
-      <FpsButton />
+      {!isLocked && <FpsButton />}
       <Views className="w-full h-full">
-        <Contents physic={true} fps={true} step={step} hitPortal={updateGate} isModalOpen={openModal} />
+        <Contents physic={true} fps={true} step={step} hitPortal={updateGate} isModalOpen={openModal} setLocked={pointerLock} />
       </Views>
-      <Modal open={openModal} close={closeModal} />
+      <Modal open={openModal} close={closeModal} keys={infoKey[step.length]} vrModal={false} />
     </>
   )
 }
+
+const infoKey = [
+  [
+    {
+      key: 'W',
+      ket: 'Untuk bergerak ke depan.'
+    },
+    {
+      key: 'A',
+      ket: 'Untuk bergerak kearah kiri.'
+    },
+    {
+      key: 'S',
+      ket: 'Untuk bergerak ke belakang.'
+    },
+    {
+      key: 'D',
+      ket: 'Untuk bergerak kearah kanan.'
+    },
+    {
+      key: 'Space',
+      ket: 'Untuk bergerak melompat.'
+    },
+  ],
+  [
+    {
+      key: 'L click',
+      ket: 'Untuk interaksi pada objek.'
+    },
+  ],
+]

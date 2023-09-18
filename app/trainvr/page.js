@@ -2,17 +2,13 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
+import { BsJoystick } from 'react-icons/bs'
 import { VRButton } from '@react-three/xr'
 import Contents from '@/components/basic/contents'
-import styles from '../app.module.css'
 import Modal from '@/components/basic/modal'
 import { toast } from 'react-toastify'
 
-const Views = dynamic(() => import("@/components/canvas/views"), {
-  loading: () => (
-    <div className={styles['custom-loader']}></div>
-  )
-})
+const Views = dynamic(() => import("@/components/canvas/views"), { ssr: false })
 
 export default function TrainVR() {
   const [step, setStep] = useState([])
@@ -25,9 +21,9 @@ export default function TrainVR() {
   })
   useEffect(() => {
     if (step.length === 1) {
-      toast.warning('Bergeraklah menuju empat lokasi panah', {autoClose:3000})
+      toast.warning('Bergeraklah menuju empat lokasi panah', { autoClose: 3000 })
     } else if (step.length === 2) {
-      toast.warning('Ambil benda bola atau kapsul', {autoClose:3000})
+      toast.warning('Ambil benda bola atau kapsul', { autoClose: 3000 })
     }
   }, [step])
   useEffect(() => {
@@ -53,7 +49,18 @@ export default function TrainVR() {
       <Views className="w-full h-full">
         <Contents physic={true} fps={false} vr={true} step={step} hitPortal={updateGate} isModalOpen={openModal} />
       </Views>
-      <Modal open={openModal} close={closeModal} />
+      <Modal open={openModal} close={closeModal} keys={infoKey} vrModal={true} />
     </>
   )
 }
+
+const infoKey = [
+  {
+    key: <BsJoystick />,
+    ket: 'Untuk bergerak ke depan, samping, dan belakang'
+  },
+  {
+    key: 'A',
+    ket: 'Untuk bergerak melompat'
+  },
+]

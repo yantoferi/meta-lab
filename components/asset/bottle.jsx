@@ -15,6 +15,7 @@ import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { RigidBody } from '@react-three/rapier'
 import { Vector3 } from 'three'
+import { Interactive, useXR } from '@react-three/xr'
 
 export function Bottle(props) {
   const bottleRef = useRef()
@@ -24,6 +25,9 @@ export function Bottle(props) {
 
   const [isDynamic, setIsDynamic] = useState(true)
 
+  // XR
+  const { session, controllers } = useXR()
+
   useFrame((state, delta) => {
     const adam = state.scene.getObjectByName('AdamBody')
     if (!isDynamic && parentRef.current && parentRef.current.userData.parentType === 'rigid_body') {
@@ -32,16 +36,28 @@ export function Bottle(props) {
       offset.add(adam.position)
       parentRef.current.position.copy(offset)
     }
+    if (session && controllers.length !== 0) {
+      const gripPos = controllers[1].grip.matrixWorld
+      if (!isDynamic && parentRef.current && parentRef.current.userData.parentType === 'rigid_body') {
+        parentRef.current.position.copy(new Vector3().setFromMatrixPosition(gripPos))
+        parentRef.current.position.add(new Vector3(0, -0.05, -0.1))
+      }
+    }
   })
 
   return (
     <group {...props} dispose={null}>
-      <RigidBody ref={bottleRef} colliders="cuboid" type={isDynamic? "dynamic":"kinematicPosition"} position={[0, 1, -1]} userData={{parentType: 'rigid_body'}}>
-        <mesh castShadow receiveShadow geometry={nodes.Sklianka__0.geometry} material={materials['Scene_-_Root']} position={[0, 0.088, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={0.4} onClick={(event) => {
-          setIsDynamic(!isDynamic)
-          parentRef.current = event.object.parent
-        }} />
-      </RigidBody>
+      <Interactive
+        onSelectStart={(xrEvent) => { setIsDynamic(false); parentRef.current = xrEvent.intersection?.object.parent }}
+        onSelectEnd={() => setIsDynamic(true)}
+      >
+        <RigidBody ref={bottleRef} colliders="cuboid" type={isDynamic ? "dynamic" : "kinematicPosition"} position={[0, 1, -1]} userData={{ parentType: 'rigid_body' }}>
+          <mesh castShadow receiveShadow geometry={nodes.Sklianka__0.geometry} material={materials['Scene_-_Root']} position={[0, 0.088, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={0.4} onClick={(event) => {
+            setIsDynamic(!isDynamic)
+            parentRef.current = event.object.parent
+          }} />
+        </RigidBody>
+      </Interactive>
     </group>
   )
 }

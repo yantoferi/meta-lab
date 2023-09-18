@@ -4,10 +4,10 @@ import dynamic from "next/dynamic"
 
 const Bottle = dynamic(() => import("@/components/asset/bottle").then(mod => mod.Bottle))
 
-export default function Experices() {
+export default function Experices(props) {
   return (
     <>
-      <Bottle />
+      {props.step?.length === 2 && <Bottle />}
     </>
   )
 }

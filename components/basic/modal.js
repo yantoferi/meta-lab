@@ -1,15 +1,16 @@
 "use client"
 
 import { Dialog } from '@headlessui/react'
+import Image from 'next/image'
 import { HiXMark } from 'react-icons/hi2'
 
 export default function Modal(props) {
   return (
-    <Dialog as='div' className='relative' open={props.open} onClose={() => props.close()} style={{zIndex: 10000}}>
+    <Dialog as='div' className='relative' open={props.open} onClose={() => props.close()} style={{ zIndex: 10000 }}>
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div className='fixed inset-0 flex w-screen items-center justify-center p-4'>
-        <Dialog.Panel className='absolute w-11/12 sm:w-8/12 md:w-7/12 lg:w-96 h-64 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white opacity-100 rounded-2xl p-4 flex flex-col justify-between'>
-          <div>
+        <Dialog.Panel className='absolute w-11/12 sm:max-w-md h-80 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white opacity-100 rounded-2xl p-4 flex flex-col justify-between'>
+          <div className='grow'>
             <div className='flex items-center justify-between'>
               <Dialog.Title className="font-bold text-black">Tutorial gerakan</Dialog.Title>
               <button type="button" onClick={() => props.close()}>
@@ -17,9 +18,33 @@ export default function Modal(props) {
               </button>
             </div>
             <hr className='my-3' />
-            <Dialog.Description className="text-black text-sm">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-            </Dialog.Description>
+            <div className='overflow-y-scroll h-48'>
+              {props.vrModal && <div className="h-44 relative">
+                <Image src="/images/controllers.jpg" alt='Gambar layout controller' fill />
+              </div>}
+              <table className='table-auto w-full'>
+                <thead className='bg-[#f9f9f9] font-medium'>
+                  <tr>
+                    <td align='center' className='p-1'>Key</td>
+                    <td align='center' className='p-1'>Kendali</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {props.keys.map((item, index) => {
+                    return (
+                      <tr key={index}>
+                        <td align='center' className='w-28'>
+                          <div className='h-8 w-auto px-2 flex items-center justify-center bg-black text-white font-medium rounded'>
+                            {item.key}
+                          </div>
+                        </td>
+                        <td align='center' className='text-sm'>{item.ket}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
           <div className='text-end'>
             <button type="button" className='py-1 px-5 bg-blue-400 rounded-md text-white'>Next</button>

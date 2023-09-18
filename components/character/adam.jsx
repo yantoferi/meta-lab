@@ -63,7 +63,7 @@ export function Adam(props) {
 
   // Frames
   useFrame((state, delta) => {
-    const offsetCam = new Vector3(0, session? 0.08:0.23, -0.1)
+    const offsetCam = new Vector3(0, session? 0.08:0.22, -0.08)
     const { forward, backward, left, right, jump } = getKey()
     const adamPosition = vec3(adam.current.translation())
     const adamRotate = quat(adam.current.rotation())
@@ -106,13 +106,15 @@ export function Adam(props) {
     adam.current.setRotation({ x: adamRotate.x, y: camRotate.y, z: adamRotate.z, w: camRotate.w })
   })
 
-  const changeStatusJump = payload => {
-    const typeObject = payload.other.rigidBodyObject.userData.type
+  const changeStatusJump = (payload, status) => {
+    const typeObject = payload.other.colliderObject.name
     const acceptObject = ['floor', 'room']
-    const onFloor = acceptObject.includes(typeObject)
+    const isFloor = acceptObject.includes(typeObject)
     
-    if (onFloor) {
+    if (isFloor && status === 'enter') {
       setCanJump(true)
+    } else if (isFloor && status === 'exit') {
+      setCanJump(false)
     }
   }
 
@@ -120,8 +122,8 @@ export function Adam(props) {
     <group ref={group} {...props} dispose={null}>
       <group name="Adam_character">
         <RigidBody ref={adam} colliders={false} type='dynamic' mass={70} position-y={0.5} enabledRotations={[false, true, false]} friction={0.2} name='AdamBody'
-          onCollisionEnter={changeStatusJump}
-          onCollisionExit={payload => setCanJump(false)}
+          onCollisionEnter={payload => changeStatusJump(payload, "enter")}
+          onCollisionExit={payload => changeStatusJump(payload, "exit")}
         >
           <CapsuleCollider args={[0.09, 0.07]} />
           <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.002} position-y={-0.17}>

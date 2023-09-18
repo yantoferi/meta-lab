@@ -28,8 +28,9 @@ export function Arrow(props) {
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Sketchfab_Scene">
-        <RigidBody colliders={false} type='fixed' userData={{id: `arrow_${props.identity}`, isArrow: true}} onIntersectionEnter={payload => props.hitPortal(payload.target.rigidBody.userData.id)}>
-          <group name="RootNode" scale={0.0007}>
+        <RigidBody colliders={false} type='fixed' userData={{id: `arrow_${props.identity}`, isArrow: true}}     onIntersectionEnter={payload => props.hitPortal(payload.target.rigidBody.userData.id)}
+        >
+          <group name="RootNode" scale={0.0001}>
             <group name="Cube_2" position={[-2.121, 1852.212, 0]} rotation={[Math.PI / 2, Math.PI / 4, 0]} scale={0.953}>
               <mesh name="Cube_2_Mat_0" castShadow receiveShadow geometry={nodes.Cube_2_Mat_0.geometry} material={materials.material} />
               <mesh name="Cube_2_Mat1_0" castShadow receiveShadow geometry={nodes.Cube_2_Mat1_0.geometry} material={materials['Mat.1']} />
@@ -46,7 +47,7 @@ export function Arrow(props) {
               <mesh name="Cube__0" castShadow receiveShadow geometry={nodes.Cube__0.geometry} material={materials.Cube_2__0} />
             </group>
           </group>
-          <CylinderCollider args={[0.1, 0.2]} sensor />
+          <CylinderCollider args={[0.02, 0.04]} sensor />
         </RigidBody>F
       </group>
     </group>
