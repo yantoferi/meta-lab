@@ -79,14 +79,14 @@ export function Adam(props) {
     vectorMovement.applyQuaternion(adamRotate)
 
     // Camera movement
-    // offsetCam.applyQuaternion(adamRotate)
-    // offsetCam.add(adamPosition)
-    // if (session) {
-    //   camRotate = new Quaternion().setFromRotationMatrix(state.camera.matrixWorld)
-    //   player.position.copy(offsetCam)
-    // } else {
-    //   state.camera.position.copy(offsetCam)
-    // }
+    offsetCam.applyQuaternion(adamRotate)
+    offsetCam.add(adamPosition)
+    if (session) {
+      camRotate = new Quaternion().setFromRotationMatrix(state.camera.matrixWorld)
+      player.position.copy(offsetCam)
+    } else {
+      state.camera.position.copy(offsetCam)
+    }
 
     if (!props.modalOpen) {
       adam.current.setLinvel({ ...vectorMovement, y: adamVel.y }, true)
@@ -125,18 +125,18 @@ export function Adam(props) {
           onCollisionEnter={payload => changeStatusJump(payload, "enter")}
           onCollisionExit={payload => changeStatusJump(payload, "exit")}
         >
-          <CapsuleCollider args={[0.08, 0.07]} />
-          <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.002} position-y={-0.16}>
+          <CapsuleCollider args={[0.12, 0.153]} />
+          <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.003} position-y={-0.27}>
             <primitive object={nodes.mixamorigHips} />
           </group>
-          <skinnedMesh name="Ch23_Belt" geometry={nodes.Ch23_Belt.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Belt.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.002} castShadow receiveShadow />
-          <skinnedMesh name="Ch23_Body" geometry={nodes.Ch23_Body.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Body.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.002} castShadow receiveShadow />
-          <skinnedMesh name="Ch23_Eyelashes" geometry={nodes.Ch23_Eyelashes.geometry} material={materials.Ch23_hair} skeleton={nodes.Ch23_Eyelashes.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.002} castShadow receiveShadow />
-          <skinnedMesh name="Ch23_Hair" geometry={nodes.Ch23_Hair.geometry} material={materials.Ch23_hair} skeleton={nodes.Ch23_Hair.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.002} castShadow receiveShadow />
-          <skinnedMesh name="Ch23_Pants" geometry={nodes.Ch23_Pants.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Pants.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.002} castShadow receiveShadow />
-          <skinnedMesh name="Ch23_Shirt" geometry={nodes.Ch23_Shirt.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Shirt.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.002} castShadow receiveShadow />
-          <skinnedMesh name="Ch23_Shoes" geometry={nodes.Ch23_Shoes.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Shoes.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.002} castShadow receiveShadow />
-          <skinnedMesh name="Ch23_Suit" geometry={nodes.Ch23_Suit.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Suit.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.002} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Belt" geometry={nodes.Ch23_Belt.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Belt.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.003} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Body" geometry={nodes.Ch23_Body.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Body.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.003} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Eyelashes" geometry={nodes.Ch23_Eyelashes.geometry} material={materials.Ch23_hair} skeleton={nodes.Ch23_Eyelashes.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.003} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Hair" geometry={nodes.Ch23_Hair.geometry} material={materials.Ch23_hair} skeleton={nodes.Ch23_Hair.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.003} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Pants" geometry={nodes.Ch23_Pants.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Pants.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.003} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Shirt" geometry={nodes.Ch23_Shirt.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Shirt.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.003} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Shoes" geometry={nodes.Ch23_Shoes.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Shoes.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.003} castShadow receiveShadow />
+          <skinnedMesh name="Ch23_Suit" geometry={nodes.Ch23_Suit.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Suit.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.003} castShadow receiveShadow />
         </RigidBody>
       </group>
     </group>
