@@ -7,9 +7,10 @@ import { Controllers } from '@react-three/xr'
 import Wrapping from '@/components/canvas/wrap'
 
 const Adam = dynamic(() => import("@/components/character/adam").then(mod => mod.Adam), { ssr: false })
-const Labs = dynamic(() => import("../asset/Labs").then(mod => mod.Labs), {ssr: false})
-const Labter = dynamic(() => import("../asset/Labter").then(mod => mod.Labter), {ssr: false})
-const SimulateLight = dynamic(() => import("@/components/lighting/light").then(mod => mod.SimulationLight), {ssr: false})
+const Labs = dynamic(() => import("../asset/labs").then(mod => mod.Labs), { ssr: false })
+const Labter = dynamic(() => import("../asset/labter").then(mod => mod.Labter), { ssr: false })
+const SimulateLight = dynamic(() => import("@/components/lighting/light").then(mod => mod.SimulationLight), { ssr: false })
+// const Stair = dynamic(() => import("@/components/asset/stair").then(mod => mod.Stair), { ssr: false })
 
 export default function Simulation(props) {
   return (

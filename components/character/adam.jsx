@@ -125,7 +125,7 @@ export function Adam(props) {
           onCollisionEnter={payload => changeStatusJump(payload, "enter")}
           onCollisionExit={payload => changeStatusJump(payload, "exit")}
         >
-          <CapsuleCollider args={[0.09, 0.07]} />
+          <CapsuleCollider args={[0.08, 0.07]} />
           <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.002} position-y={-0.16}>
             <primitive object={nodes.mixamorigHips} />
           </group>
