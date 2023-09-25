@@ -47,7 +47,7 @@ export function Arrow(props) {
               <mesh name="Cube__0" castShadow receiveShadow geometry={nodes.Cube__0.geometry} material={materials.Cube_2__0} />
             </group>
           </group>
-          <CylinderCollider args={[0.02, 0.04]} sensor />
+          <CylinderCollider args={[0.02, 0.06]} sensor />
         </RigidBody>F
       </group>
     </group>

@@ -12,7 +12,7 @@ export default function Modal(props) {
         <Dialog.Panel className='absolute w-11/12 sm:max-w-md h-80 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white opacity-100 rounded-2xl p-4 flex flex-col justify-between'>
           <div className='grow'>
             <div className='flex items-center justify-between'>
-              <Dialog.Title className="font-bold text-black">Tutorial gerakan</Dialog.Title>
+              <Dialog.Title className="font-bold text-black">Tutorial gerakan karakter</Dialog.Title>
               <button type="button" onClick={() => props.close()}>
                 <HiXMark className='w-5 h-5 text-black' />
               </button>
@@ -25,20 +25,20 @@ export default function Modal(props) {
               <table className='table-auto w-full text-black'>
                 <thead className='bg-[#f9f9f9] font-medium'>
                   <tr>
-                    <td align='center' className='p-1'>Key</td>
-                    <td align='center' className='p-1'>Kendali</td>
+                    <td align='center' className='p-1 w-2/5'>Key</td>
+                    <td align='center' className='p-1 w-3/5'>Kendali</td>
                   </tr>
                 </thead>
                 <tbody>
                   {props.keys?.map((item, index) => {
                     return (
                       <tr key={index}>
-                        <td align='center' className='w-28'>
-                          <div className='h-8 w-auto px-2 flex items-center justify-center bg-black text-white font-medium rounded'>
+                        <td className='w-28'>
+                          <div className='h-8 min-w-fit px-2 flex items-center justify-center text-black font-medium'>
                             {item.key}
                           </div>
                         </td>
-                        <td align='center' className='text-sm'>{item.ket}</td>
+                        <td className='text-sm'>{item.ket}</td>
                       </tr>
                     )
                   })}

@@ -51,7 +51,7 @@ export function Bottle(props) {
         onSelectStart={(xrEvent) => { setIsDynamic(false); parentRef.current = xrEvent.intersection?.object.parent }}
         onSelectEnd={() => setIsDynamic(true)}
       >
-        <RigidBody ref={bottleRef} colliders="cuboid" type={isDynamic ? "dynamic" : "kinematicPosition"} position={[0, 1, -1]} userData={{ parentType: 'rigid_body' }}>
+        <RigidBody ref={bottleRef} colliders="cuboid" type={isDynamic ? "dynamic" : "kinematicPosition"} position={[0, 1, 0]} userData={{ parentType: 'rigid_body' }}>
           <mesh castShadow receiveShadow geometry={nodes.Sklianka__0.geometry} material={materials['Scene_-_Root']} position={[0, 0.088, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={0.4} onClick={(event) => {
             setIsDynamic(!isDynamic)
             parentRef.current = event.object.parent

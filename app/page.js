@@ -12,6 +12,9 @@ export default function Home() {
       <div>
         <Link href="/simulatefps" className="text-black">To simulasi FPS</Link>
       </div>
+      <div>
+        <Link href="/simulatevr" className="text-black">To simulasi VR</Link>
+      </div>
     </div>
   )
 }

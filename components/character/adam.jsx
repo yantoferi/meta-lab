@@ -4,19 +4,25 @@ Command: npx gltfjsx@6.2.13 ../assets/adam.glb --transform --shadows
 Files: ../assets/adam.glb [36.13MB] > adam-transformed.glb [2.25MB] (94%)
 */
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useGLTF, useAnimations, useKeyboardControls } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { CapsuleCollider, RigidBody, quat, useRapier, vec3 } from '@react-three/rapier'
-import { Quaternion, Vector3 } from 'three'
-import { useXR } from '@react-three/xr'
+import { Vector3 } from 'three'
+import { useController, useXR } from '@react-three/xr'
 import { Ray } from '@dimforge/rapier3d-compat'
 
+const charRotate = quat()
+const rayDirection = vec3()
 const vectorMovement = new Vector3()
 
 export function Adam(props) {
+  // Refs
   const group = useRef()
   const adam = useRef()
+  const colliderRef = useRef()
+
+  // useGLTF hooks
   const { nodes, materials, animations } = useGLTF('models/Adam-transformed.glb')
   const { actions } = useAnimations(animations, group)
 
@@ -27,8 +33,13 @@ export function Adam(props) {
   // Keyboard controls
   const [subKey, getKey] = useKeyboardControls()
 
+  // Three
+  const { camera } = useThree()
+
   // XR
   const { session, player, controllers } = useXR()
+  const leftStick = useController('left')
+  const rightStick = useController('right')
 
   // Rapier
   const { world } = useRapier()
@@ -63,54 +74,58 @@ export function Adam(props) {
 
   // Frames
   useFrame((state, delta) => {
-    const offsetCam = new Vector3(0, session? 0.08:0.22, -0.08)
-    const { forward, backward, left, right, jump } = getKey()
-    const adamPosition = vec3(adam.current.translation())
-    const adamRotate = quat(adam.current.rotation())
-    const adamVel = vec3(adam.current.linvel())
-    let camRotate = state.camera.quaternion
-    
-    if (session && (controllers.length !== 0)) {
-      const analog = controllers[0]?.inputSource?.gamepad?.axes
-      vectorMovement.set(analog[2], 0, analog[3]).multiplyScalar(5 * delta).normalize()
-    } else {
-      vectorMovement.set(right - left, 0, backward - forward).multiplyScalar(5 * delta).normalize()
-    }
-    vectorMovement.applyQuaternion(adamRotate)
+    const { forward, backward, left, right, jump, run } = getKey()
+    const offsetCam = new Vector3(0, 0.3, -0.1)
+    const currentPos = vec3(adam.current.translation())
+    const currentRotate = quat(adam.current.rotation())
+    const currentVeloc = vec3(adam.current.linvel())
+    const minOrigin = new Vector3().copy(currentPos).add(new Vector3(0, -0.12, 0))
 
-    // Camera movement
-    offsetCam.applyQuaternion(adamRotate)
-    offsetCam.add(adamPosition)
-    if (session) {
-      camRotate = new Quaternion().setFromRotationMatrix(state.camera.matrixWorld)
-      player.position.copy(offsetCam)
-    } else {
-      state.camera.position.copy(offsetCam)
-    }
+    // offsetCam.applyQuaternion(currentRotate)
+    // offsetCam.add(currentPos)
+    // if (session) {
+    //   updatePositionCam('vr', offsetCam)
+    // } else {
+    //   updatePositionCam('fps', offsetCam)
+    // }
 
-    if (!props.modalOpen) {
-      adam.current.setLinvel({ ...vectorMovement, y: adamVel.y }, true)
-    }
+    const raycastTop = new Ray(
+      currentPos,
+      rayDirection.set(right - left, 0, backward - forward).applyQuaternion(currentRotate)
+    )
+    const raycastBot = new Ray(
+      minOrigin,
+      rayDirection.set(right - left, 0, backward - forward).applyQuaternion(currentRotate)
+    )
+    const hitMax = world.castRay(raycastTop, 0.1, true, undefined, undefined, colliderRef.current, adam.current)
+    const hitMin = world.castRay(raycastBot, 0.1, true, undefined, undefined, colliderRef.current, adam.current)
 
-    // For jump
-    if (session && (controllers.length !== 0)) {
-      if (canJump && controllers[0]?.inputSource?.gamepad?.buttons[5].pressed) {
-        adam.current.setLinvel({ ...vectorMovement, y: 2 }, true)
-      }
-    } else {
-      if (canJump && jump) {
-        adam.current.setLinvel({ ...vectorMovement, y: 2 }, true)
-      }
-    }
+    vectorMovement.set(right - left, 0, backward - forward).multiplyScalar((run ? 50 : 25) * delta)
+    vectorMovement.applyQuaternion(currentRotate)
+    adam.current.setLinvel({ ...vectorMovement, y: currentVeloc.y }, true)
 
-    adam.current.setRotation({ x: adamRotate.x, y: camRotate.y, z: adamRotate.z, w: camRotate.w })
+    charRotate.setFromEuler(state.camera.rotation)
+    adam.current.setRotation(quat({ ...currentRotate, y: charRotate.y, w: charRotate.w }), true)
+
+    if (!hitMax && hitMin && (forward || backward || left || right)) {
+      adam.current.applyImpulse({ x: 0, y: 0.004, z: 0 }, true)
+    }
   })
 
+  const updatePositionCam = (mode, position) => {
+    if (mode === 'fps') {
+      camera.position.copy(position)
+    } else if (mode === 'vr') {
+      player.position.copy(position)
+    }
+  }
+
+  // Condition for jump or not
   const changeStatusJump = (payload, status) => {
     const typeObject = payload.other.colliderObject.name
     const acceptObject = ['floor', 'room']
     const isFloor = acceptObject.includes(typeObject)
-    
+
     if (isFloor && status === 'enter') {
       setCanJump(true)
     } else if (isFloor && status === 'exit') {
@@ -121,12 +136,12 @@ export function Adam(props) {
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Adam_character">
-        <RigidBody ref={adam} colliders={false} type='dynamic' mass={70} position-y={0.5} enabledRotations={[false, true, false]} friction={0.2} name='AdamBody'
+        <RigidBody ref={adam} colliders={false} type='dynamic' mass={70} position-y={1.5} enabledRotations={[false, true, false]} friction={0.2} name='AdamBody'
           onCollisionEnter={payload => changeStatusJump(payload, "enter")}
           onCollisionExit={payload => changeStatusJump(payload, "exit")}
         >
-          <CapsuleCollider args={[0.12, 0.153]} />
-          <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.003} position-y={-0.27}>
+          <CapsuleCollider ref={colliderRef} args={[0.1, 0.08]} />
+          <group name="Armature" rotation={[Math.PI / 2, 0, -Math.PI]} scale={0.003} position-y={-0.18}>
             <primitive object={nodes.mixamorigHips} />
           </group>
           <skinnedMesh name="Ch23_Belt" geometry={nodes.Ch23_Belt.geometry} material={materials.Ch23_body} skeleton={nodes.Ch23_Belt.skeleton} rotation={[Math.PI / 2, 0, 0]} scale={0.003} castShadow receiveShadow />
