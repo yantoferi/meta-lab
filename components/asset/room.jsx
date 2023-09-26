@@ -9,14 +9,15 @@ Title: Sitting Room with Baked Textures
 */
 
 import { useGLTF } from '@react-three/drei'
-import { RigidBody } from '@react-three/rapier'
+import { CuboidCollider, RigidBody } from '@react-three/rapier'
 
 export function Room(props) {
   const { nodes, materials } = useGLTF('models/room-transformed.glb')
   return (
     <group {...props} dispose={null}>
-      <RigidBody colliders="trimesh" type="fixed">
+      <RigidBody colliders="trimesh" type="fixed" onIntersectionEnter={() => console.log("trigered")}>
         <mesh castShadow receiveShadow geometry={nodes.Object_2.geometry} material={materials.material} rotation={[-Math.PI / 2, 0, 0]} scale={0.5} />
+        <CuboidCollider args={[0.2, 0.02, 0.35]} position={[-1.25, 0.25, 0.8]} sensor />
       </RigidBody>
     </group>
   )

@@ -7,7 +7,7 @@ const Bottle = dynamic(() => import("@/components/asset/bottle").then(mod => mod
 export default function Experices(props) {
   return (
     <>
-      {props.step?.length === 2 && <Bottle />}
+      {props.step.length === 2 && <Bottle />}
     </>
   )
 }

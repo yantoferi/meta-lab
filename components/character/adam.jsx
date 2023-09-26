@@ -81,13 +81,13 @@ export function Adam(props) {
     const currentVeloc = vec3(adam.current.linvel())
     const minOrigin = new Vector3().copy(currentPos).add(new Vector3(0, -0.12, 0))
 
-    // offsetCam.applyQuaternion(currentRotate)
-    // offsetCam.add(currentPos)
-    // if (session) {
-    //   updatePositionCam('vr', offsetCam)
-    // } else {
-    //   updatePositionCam('fps', offsetCam)
-    // }
+    offsetCam.applyQuaternion(currentRotate)
+    offsetCam.add(currentPos)
+    if (session) {
+      updatePositionCam('vr', offsetCam)
+    } else {
+      updatePositionCam('fps', offsetCam)
+    }
 
     const raycastTop = new Ray(
       currentPos,

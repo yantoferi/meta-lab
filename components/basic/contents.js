@@ -1,7 +1,7 @@
 "use client"
 
 import dynamic from 'next/dynamic'
-import { PerspectiveCamera, PointerLockControls, OrbitControls } from '@react-three/drei'
+import { PerspectiveCamera, PointerLockControls } from '@react-three/drei'
 import { Suspense } from 'react'
 import { Controllers } from '@react-three/xr'
 import Wrapping from '@/components/canvas/wrap'
@@ -15,13 +15,12 @@ const TrainLight = dynamic(() => import("@/components/lighting/light").then(mod 
 export default function Contents(props) {
   return (
     <Suspense fallback={null}>
-      {/* {props.fps && <PointerLockControls selector='#startfps' onLock={() => props.setLocked(true)} onUnlock={() => props.setLocked(false)} />} */}
-      <OrbitControls />
-      <PerspectiveCamera makeDefault position={[0, 2, 4]} />
+      {props.fps && <PointerLockControls selector='#startfps' onLock={() => props.setLocked(true)} onUnlock={() => props.setLocked(false)} />}
+      <PerspectiveCamera makeDefault position={[0, 2, 2]} />
       <TrainLight />
       <Wrapping usePhysic={props.physic}>
         {props.vr && <Controllers rayMaterial="red" />}
-        {arrowPosition.map((item, id) => (
+        {(props.step.length < 2) && arrowPosition.map((item, id) => (
           <Arrow key={id} identity={id} position={[item.x, item.y, item.z]} hitPortal={props.hitPortal} />
         ))}
         <Room />
