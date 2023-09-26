@@ -12,14 +12,14 @@ export default function Modal(props) {
         <Dialog.Panel className='absolute w-11/12 sm:max-w-md h-80 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white opacity-100 rounded-2xl p-4 flex flex-col justify-between'>
           <div className='grow'>
             <div className='flex items-center justify-between'>
-              <Dialog.Title className="font-bold text-black">Tutorial gerakan karakter</Dialog.Title>
+              <Dialog.Title className="font-bold text-black">{props.step?.length < 2? "Tutorial gerakan karakter":"Tutorial interaksi objek"}</Dialog.Title>
               <button type="button" onClick={() => props.close()}>
                 <HiXMark className='w-5 h-5 text-black' />
               </button>
             </div>
             <hr className='my-3' />
             <div className='overflow-y-scroll h-48'>
-              {props.vrModal && <div className="h-44 relative">
+              {(props.vrModal && props.keys) && <div className="h-44 relative">
                 <Image src="/images/controllers.jpg" alt='Gambar layout controller' fill />
               </div>}
               <table className='table-auto w-full text-black'>

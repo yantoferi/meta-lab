@@ -84,9 +84,9 @@ export function Adam(props) {
     offsetCam.applyQuaternion(currentRotate)
     offsetCam.add(currentPos)
     if (session) {
-      updatePositionCam('vr', offsetCam)
+      player.position.copy(offsetCam)
     } else {
-      updatePositionCam('fps', offsetCam)
+      camera.position.copy(offsetCam)
     }
 
     const raycastTop = new Ray(
@@ -100,7 +100,12 @@ export function Adam(props) {
     const hitMax = world.castRay(raycastTop, 0.1, true, undefined, undefined, colliderRef.current, adam.current)
     const hitMin = world.castRay(raycastBot, 0.1, true, undefined, undefined, colliderRef.current, adam.current)
 
-    vectorMovement.set(right - left, 0, backward - forward).multiplyScalar((run ? 50 : 25) * delta)
+    if (session && rightStick) {
+      const [, , xAxes, yAxes] = rightStick.inputSource.gamepad.axes
+      vectorMovement.set(xAxes, 0, yAxes).multiplyScalar((run ? 50 : 25) * delta)
+    } else if (!session) {
+      vectorMovement.set(right - left, 0, backward - forward).multiplyScalar((run ? 50 : 25) * delta)
+    }
     vectorMovement.applyQuaternion(currentRotate)
     adam.current.setLinvel({ ...vectorMovement, y: currentVeloc.y }, true)
 
@@ -111,14 +116,6 @@ export function Adam(props) {
       adam.current.applyImpulse({ x: 0, y: 0.004, z: 0 }, true)
     }
   })
-
-  const updatePositionCam = (mode, position) => {
-    if (mode === 'fps') {
-      camera.position.copy(position)
-    } else if (mode === 'vr') {
-      player.position.copy(position)
-    }
-  }
 
   // Condition for jump or not
   const changeStatusJump = (payload, status) => {

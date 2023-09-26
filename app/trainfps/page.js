@@ -23,7 +23,7 @@ export default function TrainFps() {
     if (step.length === 1) {
       toast.warning('Bergeraklah menuju empat lokasi panah', { autoClose: 2000 })
     } else if (step.length === 2) {
-      toast.warning('Ambil benda bola atau kapsul', { autoClose: 2000 })
+      toast.warning('Ambil botol dan letakan di meja', { autoClose: 2000 })
     }
   }, [step])
   useEffect(() => {

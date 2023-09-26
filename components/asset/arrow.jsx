@@ -28,7 +28,7 @@ export function Arrow(props) {
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Sketchfab_Scene">
-        <RigidBody colliders={false} type='fixed' userData={{id: `arrow_${props.identity}`, isArrow: true}}     onIntersectionEnter={payload => props.hitPortal(payload.target.rigidBody.userData.id)}
+        <RigidBody colliders={false} type='fixed' userData={{id: `arrow_${props.identity}`, isArrow: true}} onIntersectionEnter={payload => props.hitPortal(payload.target.rigidBody.userData.id)}
         >
           <group name="RootNode" scale={0.0001}>
             <group name="Cube_2" position={[-2.121, 1852.212, 0]} rotation={[Math.PI / 2, Math.PI / 4, 0]} scale={0.953}>
