@@ -46,9 +46,6 @@ export default function Modal(props) {
               </table>
             </div>
           </div>
-          <div className='text-end'>
-            <button type="button" className='py-1 px-5 bg-blue-400 rounded-md text-white'>Next</button>
-          </div>
         </Dialog.Panel>
       </div>
     </Dialog>
