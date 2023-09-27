@@ -6,7 +6,7 @@ Files: ../assets/adam.glb [36.13MB] > adam-transformed.glb [2.25MB] (94%)
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useGLTF, useAnimations, useKeyboardControls } from '@react-three/drei'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
 import { CapsuleCollider, RigidBody, quat, useRapier, vec3 } from '@react-three/rapier'
 import { Vector3 } from 'three'
 import { useController, useXR } from '@react-three/xr'
@@ -32,9 +32,6 @@ export function Adam(props) {
 
   // Keyboard controls
   const [subKey, getKey] = useKeyboardControls()
-
-  // Three
-  const { camera } = useThree()
 
   // XR
   const { session, player, controllers } = useXR()
@@ -86,7 +83,7 @@ export function Adam(props) {
     if (session) {
       player.position.copy(offsetCam)
     } else {
-      camera.position.copy(offsetCam)
+      state.camera.position.copy(offsetCam)
     }
 
     const raycastTop = new Ray(
@@ -102,10 +99,11 @@ export function Adam(props) {
 
     if (session && rightStick) {
       const [, , xAxes, yAxes] = rightStick.inputSource.gamepad.axes
-      vectorMovement.set(xAxes, 0, yAxes).multiplyScalar((run ? 50 : 25) * delta)
+      vectorMovement.set(xAxes, 0, yAxes).multiplyScalar((run ? 50 : 20) * delta)
     } else if (!session) {
-      vectorMovement.set(right - left, 0, backward - forward).multiplyScalar((run ? 50 : 25) * delta)
+      vectorMovement.set(right - left, 0, backward - forward).multiplyScalar((run ? 50 : 20) * delta)
     }
+    
     vectorMovement.applyQuaternion(currentRotate)
     adam.current.setLinvel({ ...vectorMovement, y: currentVeloc.y }, true)
 
@@ -113,7 +111,7 @@ export function Adam(props) {
     adam.current.setRotation(quat({ ...currentRotate, y: charRotate.y, w: charRotate.w }), true)
 
     if (!hitMax && hitMin && (forward || backward || left || right)) {
-      adam.current.applyImpulse({ x: 0, y: 0.004, z: 0 }, true)
+      adam.current.applyImpulse({ x: 0, y: 0.006, z: 0 }, true)
     }
   })
 

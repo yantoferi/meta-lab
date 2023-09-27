@@ -2,10 +2,9 @@
 
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
-import { PointerLockControls, PerspectiveCamera, Plane} from '@react-three/drei'
+import { PointerLockControls, PerspectiveCamera, Environment} from '@react-three/drei'
 import { Controllers } from '@react-three/xr'
 import Wrapping from '@/components/canvas/wrap'
-import { RigidBody } from '@react-three/rapier'
 
 const Adam = dynamic(() => import("@/components/character/adam").then(mod => mod.Adam), { ssr: false })
 const Labs = dynamic(() => import("../asset/labs").then(mod => mod.Labs), { ssr: false })
@@ -21,13 +20,11 @@ export default function Simulation(props) {
       {props.fps && <PointerLockControls selector='#startfps' />}
       <PerspectiveCamera makeDefault position={[0, 2, 4]} />
       <SimulateLight />
+      <Environment files="hdr/cloudy.hdr" background />
       <Wrapping usePhysic={props.physic}>
         {props.vr && <Controllers rayMaterial="red" />}
-        <RigidBody colliders="hull" type="fixed">
-          <Plane args={[10, 10]} rotation-x={-Math.PI / 2}>
-            <meshBasicMaterial color="whitesmoke" />
-          </Plane>
-        </RigidBody>
+        <Labter />
+        <Labs />
         <Stair />
         <Adam />
       </Wrapping>

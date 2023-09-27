@@ -12,6 +12,7 @@ Title: Sitting Room with Baked Textures
 
 import { useGLTF } from '@react-three/drei'
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
+import { useXR } from '@react-three/xr'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 
@@ -20,9 +21,17 @@ export function Room(props) {
 
   const router = useRouter()
 
+  const { session } = useXR()
+
   const endedTutor = () => {
-    toast.success("Complete", {autoClose: 1000})
-    setTimeout(() => router.replace('/'), 1500)
+    toast.success("Complete", { autoClose: 1000 })
+    setTimeout(() => {
+      endedSession()
+      router.replace('/')
+    }, 1500)
+  }
+  const endedSession = async () => {
+    const end = await session.end()
   }
   return (
     <group {...props} dispose={null}>

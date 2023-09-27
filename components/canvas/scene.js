@@ -8,7 +8,7 @@ export default function Scene(props) {
   return (
     <Canvas
       shadows="soft"
-      camera={{position: [0, -0.3, 1]}}
+      camera={{position: [0, 0.5, 1]}}
       style={{
         width: '100%',
         height: '100vh',
