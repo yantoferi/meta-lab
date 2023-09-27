@@ -111,7 +111,7 @@ export function Adam(props) {
     adam.current.setRotation(quat({ ...currentRotate, y: charRotate.y, w: charRotate.w }), true)
 
     if (!hitMax && hitMin && (forward || backward || left || right)) {
-      adam.current.applyImpulse({ x: 0, y: 0.006, z: 0 }, true)
+      adam.current.applyImpulse({ x: 0, y: 0.008, z: 0 }, true)
     }
   })
 
